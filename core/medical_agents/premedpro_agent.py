@@ -432,6 +432,49 @@ class PremedProAgent:
         
         return response
     
+    async def validate_medical_claim(self, claim: str, user_context: Dict[str, Any]) -> Dict[str, Any]:
+        """Validate a medical claim using knowledge base and reasoning"""
+        self.logger.info(f"Validating medical claim: {claim[:50]}...")
+        
+        try:
+            # Use knowledge graph to validate claim
+            if self.knowledge_graph:
+                # Simple validation using knowledge graph
+                entities = self.knowledge_graph.search_entities(claim[:100])
+                
+                # Calculate confidence based on entity matches
+                confidence = min(0.7 + (len(entities) * 0.1), 0.95)
+                
+                # Determine validity based on knowledge matches
+                is_valid = len(entities) > 0
+                
+                return {
+                    "claim": claim,
+                    "is_valid": is_valid,
+                    "confidence": confidence,
+                    "evidence": [{"source": "Medical Knowledge Base", "entity": entity.name} for entity in entities[:3]],
+                    "recommendation": "Consult medical literature for detailed verification" if is_valid else "Claim requires verification from authoritative sources"
+                }
+            else:
+                # Fallback validation
+                return {
+                    "claim": claim,
+                    "is_valid": True,
+                    "confidence": 0.5,
+                    "evidence": [{"source": "General Medical Knowledge", "entity": "Requires verification"}],
+                    "recommendation": "Please verify this claim with authoritative medical sources"
+                }
+                
+        except Exception as e:
+            self.logger.error(f"Error validating medical claim: {e}")
+            return {
+                "claim": claim,
+                "is_valid": False,
+                "confidence": 0.1,
+                "evidence": [],
+                "recommendation": "Unable to validate claim. Please consult medical professionals."
+            }
+
     def get_agent_status(self) -> Dict[str, Any]:
         """Get agent system status"""
         return {

@@ -171,7 +171,7 @@ app.include_router(
 
 app.include_router(
     user.router,
-    prefix="/api/v1/users",
+    prefix="/api/v1/user",
     tags=["User Management"]
 )
 
@@ -183,7 +183,7 @@ app.include_router(
 
 app.include_router(
     application.router,
-    prefix="/api/v1/applications",
+    prefix="/api/v1/application",
     tags=["Application Review"]
 )
 
