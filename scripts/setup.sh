@@ -116,7 +116,7 @@ setup_python_env() {
     install_poetry
     
     # Create virtual environment and install dependencies
-    poetry install --with dev
+    poetry install
     
     # Install OSS components in development mode
     log_info "Installing OSS components..."

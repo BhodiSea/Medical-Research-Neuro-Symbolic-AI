@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "premedpro-ai"
-dynamic = ["version"]
+version = "0.1.0"
 authors = [
     {name = "PremedPro AI Team", email = "team@premedpro-ai.com"},
 ]
 description = "Hybrid Neuro-Symbolic Medical AI System"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10,<4.0"
 keywords = ["neuro-symbolic", "medical-ai", "ethical-ai", "privacy", "healthcare"]
 license = {file = "LICENSE"}
 classifiers = [
@@ -54,7 +54,7 @@ dependencies = [
     "torchvision>=0.17.2",
     "transformers>=4.45.2",
     "accelerate>=0.33.0",
-    "sentencepiece>=0.2.0",
+    # "sentencepiece>=0.2.0",  # Temporarily disabled due to macOS compilation issues
     "sentence-transformers>=2.5.1",
     "tiktoken>=0.8.0",
     
@@ -84,7 +84,6 @@ dependencies = [
     
     # Database
     "sqlalchemy>=2.0.0",
-    "sqlite3",  # Built-in with Python
     
     # Julia integration (optional)
     "julia>=0.6.0",
@@ -119,8 +118,6 @@ testing = [
     "pytest-asyncio>=0.23.0",
     "pytest-cov>=4.1.0",
     "pytest-mock>=3.12.0",
-    "tempfile",  # Built-in
-    "unittest",  # Built-in
 ]
 
 # Julia mathematical foundation
@@ -129,9 +126,14 @@ julia = [
     "diffeqpy>=2.0.0",
 ]
 
-# Full installation with all optional dependencies
+# Full installation with all optional dependencies  
 all = [
-    "premedpro-ai[dev,docs,testing,julia]",
+    "pytest>=8.3.1",
+    "pytest-asyncio>=0.23.0", 
+    "black>=23.0.0",
+    "isort>=5.13.0",
+    "mkdocs>=1.5.0",
+    "julia>=0.6.0",
 ]
 
 [project.urls]
@@ -147,6 +149,9 @@ ethical-audit = "ethical_audit.main:main"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["core*", "math_foundation*", "orchestration*", "utils*"]
+
+[tool.poetry]
+package-mode = false
 
 [tool.setuptools_scm]
 write_to = "_version.py"

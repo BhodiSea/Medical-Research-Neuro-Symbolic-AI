@@ -23,12 +23,17 @@ except ImportError:
     TORCHLOGIC_AVAILABLE = False
 
 try:
-    # Import from SymbolicAI
-    sys.path.append(os.path.join(os.path.dirname(__file__), 'symbolicai'))
+    # Import from SymbolicAI (now properly installed)
     from symai import Symbol  # Based on README, this seems to be the main class
     SYMBOLICAI_AVAILABLE = True
 except ImportError:
-    SYMBOLICAI_AVAILABLE = False
+    try:
+        # Fallback: try importing from submodule path
+        sys.path.append(os.path.join(os.path.dirname(__file__), 'symbolicai'))
+        from symai import Symbol
+        SYMBOLICAI_AVAILABLE = True
+    except ImportError:
+        SYMBOLICAI_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
 
