@@ -85,18 +85,39 @@ async def process_medical_query(
             "timestamp": datetime.utcnow().isoformat()
         }
         
-        # Call the medical agent (our existing PremedPro agent)
-        agent_response = await medical_agent.process_query(
-            query=request.query,
-            context=context
+        # Create medical query object for the agent
+        from core.medical_agents.premedpro_agent import MedicalQuery
+        
+        medical_query = MedicalQuery(
+            query_id=f"query_{hash(request.query)}_{current_user.id}",
+            user_type=getattr(current_user, 'role', 'medical_student'),
+            query_text=request.query,
+            context=context,
+            urgency=request.urgency,
+            domain=request.query_type
         )
         
-        # Extract response components
-        medical_response = agent_response.get("response", {})
-        confidence_score = agent_response.get("confidence", 0.0)
-        reasoning_path = agent_response.get("reasoning_path", [])
-        ethical_compliance = agent_response.get("ethical_compliance", True)
-        sources = agent_response.get("sources", [])
+        # Call the medical agent with correct method name
+        agent_response = await medical_agent.process_medical_query(medical_query)
+        
+        # Extract response components from MedicalResponse object
+        medical_response = agent_response.response_text
+        confidence_score = agent_response.confidence
+        reasoning_path = agent_response.reasoning_steps
+        ethical_compliance = agent_response.ethical_compliance
+        
+                 # Convert sources to proper format (dict instead of string)
+        raw_sources = agent_response.sources
+        sources = []
+        for source in raw_sources:
+            if isinstance(source, str):
+                sources.append({
+                    "title": source,
+                    "url": "",
+                    "type": "knowledge_base"
+                })
+            else:
+                sources.append(source)
         
         # Generate medical disclaimer if required
         medical_disclaimer = None
@@ -109,13 +130,20 @@ async def process_medical_query(
             )
         
         # Store query in database
-        db_query = MedicalQuery(
+        from ..database.models import MedicalQuery as DbMedicalQuery
+        
+        db_query = DbMedicalQuery(
             user_id=current_user.id,
             query_text=request.query,
-            response_data=agent_response,
+            response_data={
+                "response": medical_response,
+                "confidence": confidence_score,
+                "reasoning_steps": reasoning_path,
+                "sources": sources
+            },
             confidence_score=confidence_score,
             ethical_compliance=ethical_compliance,
-            processing_time_ms=agent_response.get("processing_time", 0),
+            processing_time_ms=1000,  # TODO: Add actual timing
             query_type=request.query_type
         )
         
@@ -130,13 +158,16 @@ async def process_medical_query(
         response = MedicalQueryResponse(
             query_id=str(saved_query.id),
             query=request.query,
-            response=medical_response,
+            response={
+                "answer": medical_response,
+                "type": "educational" if request.query_type in ["general", "education"] else "clinical_guidance"
+            },
             confidence_score=confidence_score,
             ethical_compliance=ethical_compliance,
             reasoning_path=reasoning_path,
             sources=sources,
             medical_disclaimer=medical_disclaimer,
-            processing_time_ms=agent_response.get("processing_time", 0),
+            processing_time_ms=1000,  # TODO: Add actual timing
             timestamp=datetime.utcnow()
         )
         
@@ -147,9 +178,10 @@ async def process_medical_query(
         raise
     except Exception as e:
         logger.error(f"Error processing medical query: {str(e)}", exc_info=True)
+        # Return more detailed error for debugging
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An error occurred while processing your medical query"
+            detail=f"Error processing medical query: {str(e)[:200]}"
         )
 
 

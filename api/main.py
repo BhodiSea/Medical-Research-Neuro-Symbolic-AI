@@ -56,11 +56,26 @@ async def lifespan(app: FastAPI):
     
     # Initialize medical AI components
     try:
+        import sys
+        import os
+        # Add parent directory to Python path to import core modules
+        parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if parent_dir not in sys.path:
+            sys.path.insert(0, parent_dir)
+        
         from core.medical_agents.premedpro_agent import create_premedpro_agent
-        app.state.medical_agent = create_premedpro_agent()
+        
+        config = {
+            "safety_mode": "high",
+            "reasoning_mode": "adaptive",
+            "max_query_length": 5000
+        }
+        app.state.medical_agent = create_premedpro_agent(config)
         logger.info("Medical AI agent initialized successfully")
     except Exception as e:
         logger.error(f"Medical AI initialization failed: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
         # Continue without medical agent for now
         app.state.medical_agent = None
     
