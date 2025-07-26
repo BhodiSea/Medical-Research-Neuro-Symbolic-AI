@@ -1,0 +1,18 @@
+[submodule "core/symbolic/nstk"]
+	path = core/symbolic/nstk
+	url = https://github.com/IBM/neuro-symbolic-ai
+[submodule "core/symbolic/nucleoid"]
+	path = core/symbolic/nucleoid
+	url = https://github.com/NucleoidAI/Nucleoid
+[submodule "core/symbolic/peirce"]
+	path = core/symbolic/peirce
+	url = https://github.com/neuro-symbolic-ai/peirce
+[submodule "core/neural/torchlogic"]
+	path = core/neural/torchlogic
+	url = https://github.com/IBM/torchlogic
+[submodule "core/neural/symbolicai"]
+	path = core/neural/symbolicai
+	url = https://github.com/ExtensityAI/symbolicai
+[submodule "orchestration/openssa"]
+	path = orchestration/openssa
+	url = https://github.com/aitomatic/openssa

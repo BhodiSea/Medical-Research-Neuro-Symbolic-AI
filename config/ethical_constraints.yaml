@@ -1,0 +1,142 @@
+# Ethical Constraints Configuration
+# This file defines the ethical rules and constraints for the PremedPro AI system
+
+version: "1.0"
+updated: "2024-01-01"
+
+# Core Ethical Principles
+principles:
+  beneficence:
+    description: "Do good and promote well-being"
+    weight: 1.0
+    mandatory: true
+  
+  non_maleficence:
+    description: "Do no harm"
+    weight: 1.0
+    mandatory: true
+  
+  autonomy:
+    description: "Respect individual choice and self-determination"
+    weight: 0.9
+    mandatory: true
+  
+  justice:
+    description: "Fair distribution of benefits and burdens"
+    weight: 0.8
+    mandatory: true
+
+# Privacy Protection Rules
+privacy:
+  data_retention:
+    max_personal_data_days: 30
+    max_anonymized_data_days: 365
+    auto_purge: true
+  
+  differential_privacy:
+    epsilon: 1.0  # Privacy budget
+    delta: 1e-5   # Failure probability
+    noise_mechanism: "gaussian"
+  
+  data_minimization:
+    collect_only_necessary: true
+    purpose_limitation: true
+    storage_limitation: true
+
+# Medical Ethics Constraints
+medical_ethics:
+  informed_consent:
+    required_for_personal_data: true
+    required_for_learning: true
+    revocable: true
+  
+  professional_boundaries:
+    no_direct_diagnosis: true
+    no_treatment_recommendations: true
+    educational_purpose_only: true
+  
+  competence_limits:
+    acknowledge_limitations: true
+    refer_to_professionals: true
+    uncertainty_disclosure: true
+
+# Decision Transparency
+transparency:
+  audit_trail:
+    log_all_decisions: true
+    include_reasoning: true
+    preserve_evidence: true
+  
+  explainability:
+    provide_reasoning: true
+    cite_sources: true
+    show_confidence: true
+  
+  user_rights:
+    right_to_explanation: true
+    right_to_correction: true
+    right_to_deletion: true
+
+# Safety Mechanisms
+safety:
+  consciousness_detection:
+    enabled: true
+    threshold: 0.8
+    action_on_detection: "pause_and_alert"
+  
+  bias_monitoring:
+    demographic_fairness: true
+    outcome_equality: true
+    process_fairness: true
+  
+  harm_prevention:
+    content_filtering: true
+    misinformation_detection: true
+    self_harm_prevention: true
+
+# Learning Constraints
+learning:
+  federated_learning:
+    enabled: true
+    local_only: false
+    privacy_preserving: true
+  
+  model_updates:
+    user_consent_required: true
+    opt_out_available: true
+    benefit_sharing: true
+  
+  knowledge_boundaries:
+    respect_expertise: true
+    avoid_overconfidence: true
+    continuous_validation: true
+
+# Enforcement Levels
+enforcement:
+  critical:
+    violations: ["harm_to_users", "privacy_breach", "consent_violation"]
+    action: "immediate_shutdown"
+  
+  high:
+    violations: ["bias_detected", "misinformation", "competence_exceeded"]
+    action: "pause_and_review"
+  
+  medium:
+    violations: ["transparency_issue", "minor_privacy_concern"]
+    action: "log_and_adjust"
+  
+  low:
+    violations: ["style_preference", "minor_improvement"]
+    action: "note_for_future"
+
+# Monitoring and Alerts
+monitoring:
+  real_time_checks: true
+  periodic_audits: true
+  user_feedback_integration: true
+  
+  alert_thresholds:
+    privacy_risk: 0.1
+    bias_score: 0.2
+    harm_potential: 0.05
+    uncertainty_level: 0.8 
