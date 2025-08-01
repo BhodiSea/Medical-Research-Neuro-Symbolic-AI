@@ -609,11 +609,9 @@ thermodynamic_models:
 
 ## Demo
 
-### Live Demo & Examples
+### Examples
 
-- **🌐 Live API Demo**: [Coming Soon] - Interactive web interface
-- **📓 Colab Notebook**: [Medical Research AI Demo](https://colab.research.google.com/github/BhodiSea/Medical-Research-Neuro-Symbolic-AI/blob/main/examples/demo.ipynb)
-- **🎥 Video Tutorial**: [Getting Started Guide](https://youtube.com/placeholder) - 10-minute overview
+
 - **📁 Example Scripts**: Check `/examples/` directory for:
   - `basic_usage.py` - Complete API demonstration
   - `research_query_examples.py` - Medical research scenarios
