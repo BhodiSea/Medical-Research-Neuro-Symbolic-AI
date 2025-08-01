@@ -161,3 +161,25 @@ temp/
 
 # Docker
 .dockerignore 
+# Submodule build artifacts
+core/symbolic/*/build/
+core/symbolic/*/dist/
+core/neural/*/build/
+core/neural/*/dist/
+orchestration/*/build/
+orchestration/*/dist/
+ethical_audit/*/build/
+ethical_audit/*/dist/
+
+# Submodule temporary files
+core/symbolic/*/.cache/
+core/neural/*/.cache/
+orchestration/*/.cache/
+ethical_audit/*/.cache/
+
+# Submodule logs
+core/symbolic/*/logs/
+core/neural/*/logs/
+orchestration/*/logs/
+ethical_audit/*/logs/
+EOF < /dev/null

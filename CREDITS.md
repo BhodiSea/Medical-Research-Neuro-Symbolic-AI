@@ -70,3 +70,57 @@ When adding new open-source dependencies, please:
 2. Verify license compatibility
 3. Document any modifications made
 4. Maintain clear separation between original and custom code 
+## Additional Open Source Components
+
+### Multi-Agent Systems
+- **Autonomous Agents** - https://github.com/tmgthb/Autonomous-Agents
+  - License: Check repository for current license
+  - Usage: Decentralized multi-agent consensus for 10th man system
+
+- **CrewAI** - https://github.com/crewAIInc/crewAI  
+  - License: MIT License
+  - Usage: Multi-agent orchestration and role-playing for ethical deliberation
+
+- **Aiwaves Agents** - https://github.com/aiwaves-cn/agents
+  - License: Check repository for current license
+  - Usage: Self-evolving autonomous language agents
+
+### Explainability and Ethics
+- **AI Explainability 360** - https://github.com/Trusted-AI/AIX360
+  - License: Apache License 2.0
+  - Usage: AI model interpretation and explanation for audit trails
+
+- **Holistic AI** - https://github.com/holistic-ai/holisticai
+  - License: Apache License 2.0  
+  - Usage: AI trustworthiness assessment and bias detection
+
+### Memory and Storage
+- **Mem0** - https://github.com/mem0ai/mem0
+  - License: Check repository for current license
+  - Usage: Universal memory layer for long-term ethical storage
+
+- **Weaviate** - https://github.com/weaviate/weaviate
+  - License: BSD 3-Clause License
+  - Usage: Vector database for semantic memory and knowledge retrieval
+
+### External AI Integration
+- **SuperAGI** - https://github.com/TransformerOptimus/SuperAGI
+  - License: MIT License
+  - Usage: Framework for autonomous AI agent management and querying
+
+### Production and Monitoring
+- **Awesome Production ML** - https://github.com/EthicalML/awesome-production-machine-learning
+  - License: MIT License
+  - Usage: Resource collection for ethical ML deployment and monitoring
+
+## Integration Architecture
+
+All open source components are integrated as Git submodules with custom wrapper interfaces to provide:
+- Standardized APIs across different libraries
+- Graceful fallback modes for development
+- Medical domain-specific adaptations
+- Ethical compliance integration
+- Comprehensive error handling and logging
+
+The integration wrappers maintain the original licenses and attribution requirements of each component while providing a unified interface for the PremedPro AI hybrid neuro-symbolic system.
+EOF < /dev/null

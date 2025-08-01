@@ -172,9 +172,13 @@ include = '\.pyi?$'
 extend-exclude = '''
 /(
   # Exclude OSS submodules
-  core/symbolic/(nstk|nucleoid|peirce)/.*
+  core/symbolic/(nstk|nucleoid|peirce|mem0|weaviate)/.*
   | core/neural/(torchlogic|symbolicai)/.*
   | orchestration/openssa/.*
+  | orchestration/agents/(autonomous-agents|crewai|aiwaves-agents)/.*
+  | orchestration/external_ai_integration/superagi/.*
+  | ethical_audit/(aix360|holisticai)/.*
+  | utils/awesome-production-ml/.*
   | \.git
   | \.venv
   | build
@@ -195,9 +199,18 @@ extend_skip_glob = [
     "core/symbolic/nstk/*",
     "core/symbolic/nucleoid/*", 
     "core/symbolic/peirce/*",
+    "core/symbolic/mem0/*",
+    "core/symbolic/weaviate/*",
     "core/neural/torchlogic/*",
     "core/neural/symbolicai/*",
     "orchestration/openssa/*",
+    "orchestration/agents/autonomous-agents/*",
+    "orchestration/agents/crewai/*", 
+    "orchestration/agents/aiwaves-agents/*",
+    "orchestration/external_ai_integration/superagi/*",
+    "ethical_audit/aix360/*",
+    "ethical_audit/holisticai/*",
+    "utils/awesome-production-ml/*",
 ]
 
 # pytest configuration
@@ -234,9 +247,13 @@ warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
 exclude = [
-    "core/symbolic/(nstk|nucleoid|peirce)/.*",
+    "core/symbolic/(nstk|nucleoid|peirce|mem0|weaviate)/.*",
     "core/neural/(torchlogic|symbolicai)/.*", 
     "orchestration/openssa/.*",
+    "orchestration/agents/(autonomous-agents|crewai|aiwaves-agents)/.*",
+    "orchestration/external_ai_integration/superagi/.*", 
+    "ethical_audit/(aix360|holisticai)/.*",
+    "utils/awesome-production-ml/.*",
     "build/.*",
     "dist/.*",
 ]
@@ -251,9 +268,18 @@ omit = [
     "core/symbolic/nstk/*",
     "core/symbolic/nucleoid/*",
     "core/symbolic/peirce/*", 
+    "core/symbolic/mem0/*",
+    "core/symbolic/weaviate/*",
     "core/neural/torchlogic/*",
     "core/neural/symbolicai/*",
     "orchestration/openssa/*",
+    "orchestration/agents/autonomous-agents/*",
+    "orchestration/agents/crewai/*",
+    "orchestration/agents/aiwaves-agents/*",
+    "orchestration/external_ai_integration/superagi/*",
+    "ethical_audit/aix360/*",
+    "ethical_audit/holisticai/*",
+    "utils/awesome-production-ml/*",
 ]
 
 [tool.coverage.report]

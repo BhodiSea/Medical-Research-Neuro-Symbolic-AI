@@ -16,3 +16,30 @@
 [submodule "orchestration/openssa"]
 	path = orchestration/openssa
 	url = https://github.com/aitomatic/openssa
+[submodule "orchestration/agents/autonomous-agents"]
+	path = orchestration/agents/autonomous-agents
+	url = https://github.com/tmgthb/Autonomous-Agents.git
+[submodule "orchestration/agents/crewai"]
+	path = orchestration/agents/crewai
+	url = https://github.com/crewAIInc/crewAI.git
+[submodule "orchestration/agents/aiwaves-agents"]
+	path = orchestration/agents/aiwaves-agents
+	url = https://github.com/aiwaves-cn/agents.git
+[submodule "ethical_audit/py_bindings/aix360"]
+	path = ethical_audit/py_bindings/aix360
+	url = https://github.com/Trusted-AI/AIX360.git
+[submodule "ethical_audit/holisticai"]
+	path = ethical_audit/holisticai
+	url = https://github.com/holistic-ai/holisticai.git
+[submodule "core/symbolic/mem0"]
+	path = core/symbolic/mem0
+	url = https://github.com/mem0ai/mem0.git
+[submodule "core/symbolic/weaviate"]
+	path = core/symbolic/weaviate
+	url = https://github.com/weaviate/weaviate.git
+[submodule "orchestration/external_ai_integration/superagi"]
+	path = orchestration/external_ai_integration/superagi
+	url = https://github.com/TransformerOptimus/SuperAGI.git
+[submodule "utils/awesome-production-ml"]
+	path = utils/awesome-production-ml
+	url = https://github.com/EthicalML/awesome-production-machine-learning.git
