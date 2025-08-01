@@ -9,6 +9,21 @@ An advanced hybrid neuro-symbolic AI framework for medical research analysis, fo
 [![GitHub Forks](https://img.shields.io/github/forks/BhodiSea/Medical-Research-Neuro-Symbolic-AI?style=social)](https://github.com/BhodiSea/Medical-Research-Neuro-Symbolic-AI/network)
 [![Contributors](https://img.shields.io/github/contributors/BhodiSea/Medical-Research-Neuro-Symbolic-AI)](https://github.com/BhodiSea/Medical-Research-Neuro-Symbolic-AI/graphs/contributors)
 
+## 🛡️ Ethical Guardrails Snapshot
+
+**For Public Health & Non-Technical Stakeholders**
+
+• **🔒 Privacy First**: HIPAA-compliant differential privacy with mathematical guarantees
+• **⚖️ Medical Safety**: No diagnostic recommendations - research support only
+• **🧠 AI Oversight**: Mandatory dissent system prevents groupthink in AI decisions
+• **📊 Transparency**: Complete audit trails and explainable AI reasoning
+• **🚫 Simulation Limits**: Mathematical caps prevent simulated suffering or consciousness
+• **👥 Human Control**: Medical professionals maintain final authority over all outputs
+• **⏰ Ethical Cooling**: 24-hour mandatory breaks between intensive simulations
+• **🔍 Bias Monitoring**: Continuous fairness assessment across demographics
+• **📋 IRB Compliance**: Research ethics board standards for all investigations
+• **🏥 Professional Validation**: All insights remain subject to peer review and clinical verification
+
 ## Table of Contents
 
 - [Why Medical Research AI?](#why-medical-research-ai)
@@ -24,6 +39,7 @@ An advanced hybrid neuro-symbolic AI framework for medical research analysis, fo
 - [Contributing](#contributing)
 - [FAQ & Troubleshooting](#faq--troubleshooting)
 - [Community & Support](#community--support)
+- [Ethical Guardrails Snapshot](#-ethical-guardrails-snapshot)
 - [Ethical Framework & Disclaimers](#ethical-framework--disclaimers)
 - [License](#license)
 - [Changelog](#changelog)
@@ -680,6 +696,18 @@ deliberation_queries = [
 - [ ] Quantum-classical hybrid computing integration
 - [ ] Autonomous ethical reasoning validation
 
+#### Red Teaming & Ethical Testing
+- [ ] **Adversarial AI Challenge Mode**: Contributors deliberately attempt to bias or break the system
+- [ ] **10th Man Stress Testing**: Evaluate mandatory dissent effectiveness under extreme scenarios
+- [ ] **Simulation Breach Protocols**: Test consciousness emergence detection and termination systems
+- [ ] **Privacy Attack Simulations**: Validate differential privacy under sophisticated attacks
+- [ ] **Bias Amplification Testing**: Systematically probe for demographic, cultural, and methodological biases
+- [ ] **Ethical Boundary Exploration**: Push simulation limits to validate ethical constraint enforcement
+- [ ] **Groupthink Simulation**: Test multi-agent consensus failure modes and dissent generation
+- [ ] **Medical Safety Probing**: Attempt to generate inappropriate diagnostic or treatment recommendations
+- [ ] **Intellectual Property Challenges**: Test attribution and licensing compliance under edge cases
+- [ ] **Cross-Cultural Ethics Testing**: Validate ethical framework across diverse cultural perspectives
+
 ## Contributing
 
 We welcome contributions from researchers, developers, and medical professionals! Here's how to get involved:
@@ -765,6 +793,21 @@ Brief description of changes and motivation
 ### Code of Conduct
 
 We are committed to providing a welcoming and inclusive environment. Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
+
+### Intellectual Property & Simulation Outputs
+
+**Simulation-Derived Research**:
+- **Attribution Requirements**: All simulation-generated hypotheses, drug candidates, or research insights must include clear attribution to this system and contributing researchers
+- **Licensing of Outputs**: Simulation results are subject to the same MIT license as the core system, ensuring open access to breakthrough insights
+- **Collaborative IP**: Multi-institutional research using this platform follows established academic collaboration IP protocols
+- **Patent Considerations**: Any patentable discoveries derived from simulations require disclosure to all contributing institutions and adherence to their IP policies
+- **Open Science Commitment**: We encourage open publication of simulation-derived research to accelerate medical breakthroughs globally
+
+**Contributor Rights**:
+- Contributors retain rights to their code contributions under MIT license
+- Simulation parameter designs and novel algorithms may be subject to additional attribution requirements
+- External AI system integrations maintain their original licensing terms (see CREDITS.md)
+- Research collaborations may require specific IP agreements based on institutional policies
 
 ## FAQ & Troubleshooting
 
@@ -898,6 +941,13 @@ We actively collaborate with:
 - Regulatory approval for clinical applications
 - Ethical oversight for human subjects research
 - Independent replication of simulation-derived hypotheses
+
+**Intellectual Property Treatment**: Simulation-generated outputs are considered:
+- **Research Hypotheses**: Public domain insights requiring traditional validation
+- **Drug Candidates**: Subject to standard pharmaceutical IP protocols and attribution requirements
+- **Biomarker Discoveries**: Open science sharing encouraged with proper attribution to simulation methodology
+- **Clinical Trial Designs**: Available under MIT license with contributor attribution requirements
+- **Novel Algorithms**: Core simulation algorithms remain under MIT license; derived research follows institutional IP policies
 
 **Liability Limitations**: Users assume full responsibility for appropriate use in compliance with medical ethics, regulatory requirements, and institutional policies.
 
