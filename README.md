@@ -879,31 +879,6 @@ python -c "import julia; julia.install()"
 export DISABLE_JULIA=true
 ```
 
-## Community & Support
-
-### 💬 Get Help & Connect
-
-- **🐛 Bug Reports**: [GitHub Issues](https://github.com/BhodiSea/Medical-Research-Neuro-Symbolic-AI/issues)
-- **💡 Feature Requests**: [GitHub Discussions](https://github.com/BhodiSea/Medical-Research-Neuro-Symbolic-AI/discussions)
-- **📧 Email Support**: [medresearch-ai@example.com](mailto:medresearch-ai@example.com)
-- **📖 Documentation**: [Project Wiki](https://github.com/BhodiSea/Medical-Research-Neuro-Symbolic-AI/wiki)
-- **🎯 Discord Community**: [Join our Discord](https://discord.gg/medical-research-ai) (Coming Soon)
-
-### 🤝 Research Collaboration
-
-We actively collaborate with:
-- **🏥 Medical Institutions**: Clinical validation and real-world deployment
-- **🔬 Research Organizations**: ADNI, NIH, pharmaceutical companies
-- **🏭 Pharmaceutical Industry**: Drug discovery and clinical trial optimization
-- **🎓 Academic Institutions**: Research partnerships and student projects
-
-### 📊 Community Stats
-
-- **Contributors**: 15+ developers and researchers
-- **Research Papers**: Integration with 10,000+ medical research papers
-- **AI Systems**: 30+ integrated open-source AI frameworks
-- **Medical Domains**: Neurology, genetics, pharmacology, biostatistics
-
 ## Ethical Framework & Disclaimers
 
 ### 🔬 Simulation Ethics
