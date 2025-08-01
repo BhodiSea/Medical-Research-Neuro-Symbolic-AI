@@ -9,11 +9,20 @@ A hybrid neuro-symbolic AI framework for medical research analysis, focusing on 
 [![GitHub Forks](https://img.shields.io/github/forks/BhodiSea/Medical-Research-Neuro-Symbolic-AI?style=social)](https://github.com/BhodiSea/Medical-Research-Neuro-Symbolic-AI/network)
 [![Contributors](https://img.shields.io/github/contributors/BhodiSea/Medical-Research-Neuro-Symbolic-AI)](https://github.com/BhodiSea/Medical-Research-Neuro-Symbolic-AI/graphs/contributors)
 
+## 📋 TL;DR
+
+**What**: AI framework combining rule-based logic (*symbolic* - like medical guidelines) and machine learning (*neural* - pattern recognition) for medical research analysis  
+**Focus**: Parkinson's, ALS, and Alzheimer's research support  
+**Status**: Early development - working infrastructure, AI components need implementation  
+**Key Feature**: "10th Man" system (inspired by Israeli military intelligence) where one AI agent always argues against consensus to prevent groupthink  
+**Safety**: Research-only, no medical diagnosis, built-in ethical constraints and privacy protection  
+**Get Started**: `git clone --recursive [repo] && pip install -r requirements-api.txt && python run_api.py`
+
 ## 🛡️ Ethical Guardrails Snapshot
 
 **For Public Health & Non-Technical Stakeholders**
 
-• **🔒 Privacy First**: HIPAA-compliant differential privacy with mathematical guarantees
+• **🔒 Privacy First**: HIPAA-compliant differential privacy (mathematically proven data protection) with guarantees
 • **⚖️ Medical Safety**: No diagnostic recommendations - research support only
 • **🧠 AI Oversight**: Mandatory dissent system prevents groupthink in AI decisions
 • **📊 Transparency**: Complete audit trails and explainable AI reasoning
@@ -26,10 +35,10 @@ A hybrid neuro-symbolic AI framework for medical research analysis, focusing on 
 
 ## Table of Contents
 
+- [System Architecture](#system-architecture)
 - [Why Medical Research AI?](#why-medical-research-ai)
 - [Vision and Goals](#vision-and-goals)
 - [Project Status](#project-status)
-- [System Architecture](#system-architecture)
 - [Key Features](#key-features)
 - [Installation](#installation)
 - [Dependencies](#dependencies)
@@ -44,6 +53,110 @@ A hybrid neuro-symbolic AI framework for medical research analysis, focusing on 
 - [License](#license)
 - [Changelog](#changelog)
 
+## System Architecture
+
+### Overview Diagram
+
+```mermaid
+graph TB
+    subgraph "API Layer"
+        API[FastAPI Server]
+        DB[(Database)]
+        AUTH[Authentication]
+    end
+    
+    subgraph "Hybrid Reasoning Engine"
+        BRIDGE[Hybrid Bridge]
+        SYMBOLIC[Symbolic Reasoning]
+        NEURAL[Neural Networks]
+    end
+    
+    subgraph "Medical AI Integration"
+        AGENTS[Medical Agents]
+        EXTERNAL[External AI Systems]
+        BIOMARKER[Biomarker Discovery]
+    end
+    
+    subgraph "Foundation Systems"
+        MATH[Mathematical Foundation]
+        ETHICS[Ethical Audit]
+        ORCHESTRATION[Multi-Agent System]
+    end
+    
+    API --> BRIDGE
+    BRIDGE --> SYMBOLIC
+    BRIDGE --> NEURAL
+    BRIDGE --> AGENTS
+    AGENTS --> EXTERNAL
+    EXTERNAL --> BIOMARKER
+    MATH --> BRIDGE
+    ETHICS --> BRIDGE
+    ORCHESTRATION --> AGENTS
+```
+
+### Core Architecture Layers
+
+| Layer | Components | Status | Key Technologies |
+|-------|------------|--------|------------------|
+| **🌐 API Layer** | FastAPI, Database, Auth | ✅ Functional | FastAPI, SQLAlchemy, Pydantic |
+| **🧠 Reasoning Engine** | Hybrid Bridge, Symbolic/Neural | ⚠️ Mock | PyTorch, NSTK, Nucleoid |
+| **⚕️ Medical AI** | Agents, External Systems | ⚠️ Basic | TorchLogic, SymbolicAI, RDKit |
+| **🔢 Mathematical** | Quantum Models, Statistics | ❌ Planned | Julia, PyJulia, NumPy |
+| **⚖️ Ethics & Safety** | Audit System, Privacy | ⚠️ Config | Rust, HolisticAI, Differential Privacy |
+| **🤖 Orchestration** | Multi-Agent, Coordination | ❌ Planned | OpenSSA, CrewAI, AIWaves |
+| **🎭 Simulation Engine** | Flash Cycles, Memory Decay | ❌ Planned | Custom, Mem0, Julia Integration |
+| **🎯 10th Man System** | Consensus, Dissent, Counter-args | ❌ Planned | Multi-Agent, Ethical Reasoning |
+| **⏱️ Research Acceleration** | Timeline Modeling, Predictions | ❌ Planned | QM/QFT Models, Thermodynamics |
+
+<details>
+<summary><strong>📊 Data Flow Architecture (Click to expand)</strong></summary>
+
+**Research Query Processing Pipeline**:
+1. **Input Validation** → Query sanitization and safety checks
+2. **Strategy Selection** → Adaptive reasoning mode (symbolic_first/neural_first/parallel)
+3. **10th Man Activation** → Multi-agent deliberation with mandatory dissent
+4. **Simulation Initialization** → Internal research timeline modeling when applicable
+5. **Parallel Processing** → Simultaneous symbolic and neural analysis
+6. **Result Fusion** → Weighted combination with confidence scoring
+7. **Ethical Validation** → Safety and compliance verification through audit system
+8. **Response Generation** → Structured output with uncertainty quantification
+9. **Audit Logging** → Complete decision trail for transparency
+
+**Internal Simulation Architecture**:
+```mermaid
+graph TB
+    subgraph "Simulation Layer"
+        FLASH[Flash Cycle Engine]
+        MEMORY[Long-term Memory]
+        ETHICS[Ethical Reasoning]
+        DECAY[Memory Decay]
+    end
+    
+    subgraph "10th Man System"
+        CONSENSUS[9-Agent Consensus]
+        DISSENT[Mandatory Dissent Agent]
+        COUNTER[Counterargument Generation]
+    end
+    
+    subgraph "Research Simulation"
+        TIMELINE[Research Timeline Modeling]
+        PATIENT[Patient Life Simulation]
+        DISEASE[Disease Progression]
+        DRUG[Drug Discovery Prediction]
+    end
+    
+    FLASH --> MEMORY
+    MEMORY --> ETHICS
+    ETHICS --> CONSENSUS
+    CONSENSUS --> DISSENT
+    DISSENT --> COUNTER
+    TIMELINE --> PATIENT
+    PATIENT --> DISEASE
+    DISEASE --> DRUG
+```
+
+</details>
+
 ## Why Medical Research AI?
 
 **The Challenge**: Medical research, particularly in neurodegeneration, typically takes decades from hypothesis to treatment. Diseases like Parkinson's, ALS, and Alzheimer's affect millions while traditional research methods struggle with:
@@ -53,8 +166,8 @@ A hybrid neuro-symbolic AI framework for medical research analysis, focusing on 
 - Limited ability to process vast literature and identify novel connections
 
 **Our Solution**: A hybrid neuro-symbolic AI that combines:
-- 🧠 **Symbolic reasoning** for medical safety and interpretability
-- 🤖 **Neural networks** for pattern recognition in complex biological data
+- 🧠 **Symbolic reasoning** (rule-based logic, like clinical guidelines) for medical safety and interpretability
+- 🤖 **Neural networks** (machine learning models) for pattern recognition in complex biological data
 - ⚖️ **Ethical oversight** ensuring responsible medical AI development
 - 🔬 **Multi-agent coordination** for comprehensive research analysis
 
@@ -115,107 +228,6 @@ Support medical research analysis through AI-assisted data processing and patter
 - Authentication and user management
 - Julia mathematical foundation modules
 - Rust ethical audit system integration
-
-## System Architecture
-
-### Overview Diagram
-
-```mermaid
-graph TB
-    subgraph "API Layer"
-        API[FastAPI Server]
-        DB[(Database)]
-        AUTH[Authentication]
-    end
-    
-    subgraph "Hybrid Reasoning Engine"
-        BRIDGE[Hybrid Bridge]
-        SYMBOLIC[Symbolic Reasoning]
-        NEURAL[Neural Networks]
-    end
-    
-    subgraph "Medical AI Integration"
-        AGENTS[Medical Agents]
-        EXTERNAL[External AI Systems]
-        BIOMARKER[Biomarker Discovery]
-    end
-    
-    subgraph "Foundation Systems"
-        MATH[Mathematical Foundation]
-        ETHICS[Ethical Audit]
-        ORCHESTRATION[Multi-Agent System]
-    end
-    
-    API --> BRIDGE
-    BRIDGE --> SYMBOLIC
-    BRIDGE --> NEURAL
-    BRIDGE --> AGENTS
-    AGENTS --> EXTERNAL
-    EXTERNAL --> BIOMARKER
-    MATH --> BRIDGE
-    ETHICS --> BRIDGE
-    ORCHESTRATION --> AGENTS
-```
-
-### Core Architecture Layers
-
-| Layer | Components | Status | Key Technologies |
-|-------|------------|--------|------------------|
-| **🌐 API Layer** | FastAPI, Database, Auth | ✅ Functional | FastAPI, SQLAlchemy, Pydantic |
-| **🧠 Reasoning Engine** | Hybrid Bridge, Symbolic/Neural | ⚠️ Mock | PyTorch, NSTK, Nucleoid |
-| **⚕️ Medical AI** | Agents, External Systems | ⚠️ Basic | TorchLogic, SymbolicAI, RDKit |
-| **🔢 Mathematical** | Quantum Models, Statistics | ❌ Planned | Julia, PyJulia, NumPy |
-| **⚖️ Ethics & Safety** | Audit System, Privacy | ⚠️ Config | Rust, HolisticAI, Differential Privacy |
-| **🤖 Orchestration** | Multi-Agent, Coordination | ❌ Planned | OpenSSA, CrewAI, AIWaves |
-| **🎭 Simulation Engine** | Flash Cycles, Memory Decay | ❌ Planned | Custom, Mem0, Julia Integration |
-| **🎯 10th Man System** | Consensus, Dissent, Counter-args | ❌ Planned | Multi-Agent, Ethical Reasoning |
-| **⏱️ Research Acceleration** | Timeline Modeling, Predictions | ❌ Planned | QM/QFT Models, Thermodynamics |
-
-### Data Flow Architecture
-
-**Research Query Processing Pipeline**:
-1. **Input Validation** → Query sanitization and safety checks
-2. **Strategy Selection** → Adaptive reasoning mode (symbolic_first/neural_first/parallel)
-3. **10th Man Activation** → Multi-agent deliberation with mandatory dissent
-4. **Simulation Initialization** → Internal research timeline modeling when applicable
-5. **Parallel Processing** → Simultaneous symbolic and neural analysis
-6. **Result Fusion** → Weighted combination with confidence scoring
-7. **Ethical Validation** → Safety and compliance verification through audit system
-8. **Response Generation** → Structured output with uncertainty quantification
-9. **Audit Logging** → Complete decision trail for transparency
-
-**Internal Simulation Architecture**:
-```mermaid
-graph TB
-    subgraph "Simulation Layer"
-        FLASH[Flash Cycle Engine]
-        MEMORY[Long-term Memory]
-        ETHICS[Ethical Reasoning]
-        DECAY[Memory Decay]
-    end
-    
-    subgraph "10th Man System"
-        CONSENSUS[9-Agent Consensus]
-        DISSENT[Mandatory Dissent Agent]
-        COUNTER[Counterargument Generation]
-    end
-    
-    subgraph "Research Simulation"
-        TIMELINE[Research Timeline Modeling]
-        PATIENT[Patient Life Simulation]
-        DISEASE[Disease Progression]
-        DRUG[Drug Discovery Prediction]
-    end
-    
-    FLASH --> MEMORY
-    MEMORY --> ETHICS
-    ETHICS --> CONSENSUS
-    CONSENSUS --> DISSENT
-    DISSENT --> COUNTER
-    TIMELINE --> PATIENT
-    PATIENT --> DISEASE
-    DISEASE --> DRUG
-```
 
 ## Key Features
 
@@ -284,7 +296,8 @@ graph TB
 - Thermodynamic entropy modeling for disease progression
 - Quantum field theory for neural interaction modeling
 
-## How Internal Simulations Work
+<details>
+<summary><strong>🔬 How Internal Simulations Work (Click to expand)</strong></summary>
 
 ### Overview
 
@@ -387,6 +400,8 @@ results = simulation_engine.run_research(
 )
 ```
 
+</details>
+
 ## Installation
 
 ### Prerequisites
@@ -472,7 +487,8 @@ python run_api.py
 ```
 </details>
 
-## Dependencies
+<details>
+<summary><strong>📦 Dependencies (Click to expand)</strong></summary>
 
 ### Python Dependencies
 
@@ -506,6 +522,8 @@ python run_api.py
 | `SymbolicUtils.jl` | Symbolic mathematics | Quantum branching calculations |
 | `QuantumOptics.jl` | Quantum mechanics modeling | Multi-path research exploration |
 | `Thermodynamics.jl` | Entropy calculations | Disease progression entropy |
+
+</details>
 
 ## Quick Start
 
@@ -888,14 +906,22 @@ We actively collaborate with:
 
 ## Ethical Framework & Disclaimers
 
-### 🛡️ Privacy & Security
+### 🔬 Simulation Ethics
 
-**Data Protection**:
-- **Differential Privacy**: Mathematical privacy guarantees for all medical data
-- **HIPAA Compliance**: Healthcare privacy regulation adherence by design
-- **Data Minimization**: Collect and process only necessary information
-- **Encryption**: AES-256-GCM for data in transit and at rest
-- **Audit Trails**: Immutable logs of all data access and processing
+**Internal Simulation Constraints**:
+- **Consciousness Thresholds**: Automatic termination if subjective awareness appears to emerge
+- **Entropy Caps**: Mathematical limits preventing simulated suffering
+- **Audit Trails**: Plain-English logs of all simulation decisions
+- **Human Oversight**: Mandatory review of high-impact simulations
+- **Bias Detection**: Continuous monitoring for demographic, cultural, or methodological bias
+
+**Memory Integration Safeguards**:
+- **Distillation Process**: Simulation experiences converted to long-term agent memory
+- **Ethical Filtering**: Only beneficial learning patterns retained
+- **Autonomy Development**: Agents gain independent ethical reasoning capabilities
+- **Transparency Logging**: All memory formation processes auditable
+
+### 🤖 Agent Oversight
 
 **AI Safety & Ethics**:
 - **Bias Detection**: Continuous algorithmic bias monitoring across demographics
@@ -904,9 +930,40 @@ We actively collaborate with:
 - **Human Oversight**: Mandatory human review for medical decisions
 - **Safety Monitoring**: Real-time safety signal detection and response protocols
 
-### ⚖️ Research Ethics Compliance
+### 🎯 10th Man Protocol
 
-**Standards Adherence**:
+**Mandatory Dissent System**:
+- **Purpose**: Prevent groupthink through programmatic counterarguments
+- **Implementation**: One AI agent required to argue against consensus
+- **Scope**: Analytical purposes only, not medical advice
+- **Evaluation**: Human expert review of all generated perspectives
+- **Bias Resistance**: Systematic challenge of research hypotheses
+
+**Example Agent Deliberation Trace**:
+```
+Query: "Should we recommend early levodopa treatment for Parkinson's patients?"
+
+Agent 1 (Neurologist): "Yes - levodopa remains gold standard, improves quality of life"
+Agent 2 (Pharmacologist): "Agree - benefit-risk ratio supports early intervention"
+Agent 3 (Ethics): "Concur - patient autonomy supports symptom management"
+
+Agent 10 (Mandatory Dissent): "COUNTERARGUMENT: Early levodopa may accelerate 
+motor complications. Consider dopamine agonists first, especially in younger 
+patients. What about long-term dyskinesia risk we're not accounting for?"
+
+Result: Deliberation identifies need for age-stratified treatment protocols
+```
+
+### 🛡️ Dual-Use & Deployment Safeguards
+
+**Data Protection**:
+- **Differential Privacy**: Mathematical privacy guarantees for all medical data
+- **HIPAA Compliance**: Healthcare privacy regulation adherence by design
+- **Data Minimization**: Collect and process only necessary information
+- **Encryption**: AES-256-GCM for data in transit and at rest
+- **Audit Trails**: Immutable logs of all data access and processing
+
+**Research Ethics Compliance**:
 - **IRB Compliance**: Institutional Review Board research ethics standards
 - **Informed Consent**: Proper consent protocols for all data usage
 - **Beneficence**: Maximize benefits while minimizing potential harm
