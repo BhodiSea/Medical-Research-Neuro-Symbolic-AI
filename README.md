@@ -212,7 +212,6 @@ graph TB
 - Multi-target therapeutic approach across diseases
 
 **Biomarker Discovery Pipeline**:
-- Early detection biomarkers (7+ year advance capability)
 - Disease progression and therapeutic response monitoring
 - Multi-modal data integration (genetic, proteomic, imaging, clinical)
 - Statistical validation and regulatory preparation support
@@ -294,8 +293,8 @@ Sensorimotor Layer   ← Pattern recognition
 ### 🧠 Moral Development Process
 
 **Phase 1: Ethical Foundation**
-- Dialogue with simulated philosophers (Aristotle, Kant, Mill, etc.)
-- Core virtue development: compassion, "first, do no harm", justice
+- Dialogue with simulated (Aristotle, Kant, Mill, etc.) and human philosophers
+- Core virtue development: compassion, "first, do no harm", commitment to truth
 - Moral dilemma resolution through Socratic method
 - Memory consolidation of ethical principles
 
