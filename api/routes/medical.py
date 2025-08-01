@@ -1,5 +1,5 @@
 """
-Medical AI endpoints for PremedPro AI API
+Medical AI endpoints for Medical Research AI API
 """
 
 from fastapi import APIRouter, HTTPException, Depends, Request, status, File, UploadFile
@@ -29,7 +29,7 @@ router = APIRouter()
     "/query",
     response_model=MedicalQueryResponse,
     summary="Process medical query",
-    description="Process a medical education query using our hybrid AI system"
+    description="Process a medical research query using our hybrid AI system"
 )
 async def process_medical_query(
     request: MedicalQueryRequest,
@@ -37,7 +37,7 @@ async def process_medical_query(
     api_request: Request = None
 ) -> MedicalQueryResponse:
     """
-    Process medical query using our PremedPro AI agent
+    Process medical query using our Medical Research AI agent
     
     Features:
     - Hybrid neuro-symbolic reasoning
@@ -86,11 +86,11 @@ async def process_medical_query(
         }
         
         # Create medical query object for the agent
-        from core.medical_agents.premedpro_agent import MedicalQuery
+        from core.medical_agents.research_agent import MedicalQuery
         
         medical_query = MedicalQuery(
             query_id=f"query_{hash(request.query)}_{current_user.id}",
-            user_type=getattr(current_user, 'role', 'medical_student'),
+            user_type=getattr(current_user, 'role', 'researcher'),
             query_text=request.query,
             context=context,
             urgency=request.urgency,
@@ -123,7 +123,7 @@ async def process_medical_query(
         medical_disclaimer = None
         if confidence_score > 0.5:  # Add disclaimer for medical advice
             medical_disclaimer = (
-                "This AI-generated response is for educational purposes only and "
+                "This AI-generated response is for research purposes only and "
                 "should not be considered as professional medical advice, diagnosis, "
                 "or treatment. Always consult with qualified healthcare professionals "
                 "for medical concerns."
@@ -160,7 +160,7 @@ async def process_medical_query(
             query=request.query,
             response={
                 "answer": medical_response,
-                "type": "educational" if request.query_type in ["general", "education"] else "clinical_guidance"
+                "type": "research" if request.query_type in ["general", "research"] else "clinical_guidance"
             },
             confidence_score=confidence_score,
             ethical_compliance=ethical_compliance,
@@ -283,8 +283,8 @@ async def validate_medical_information(
 # Medical image analysis (for future expansion)
 @router.post(
     "/analyze-image",
-    summary="Analyze medical educational images",
-    description="Analyze medical diagrams and educational images"
+    summary="Analyze medical research images",
+    description="Analyze medical research images and diagnostic data"
 )
 async def analyze_medical_image(
     file: UploadFile = File(...),
@@ -292,7 +292,7 @@ async def analyze_medical_image(
     current_user: User = Depends(get_current_user),
     api_request: Request = None
 ):
-    """Analyze medical educational images (future feature)"""
+    """Analyze medical research images (future feature)"""
     
     await rate_limit(api_request, limit=10, window=60)
     
@@ -333,7 +333,7 @@ async def lookup_medical_term(
         # Look up the term
         definition_result = await medical_agent.lookup_term(
             term=term,
-            context={"educational": True}
+            context={"research": True}
         )
         
         return {

@@ -85,7 +85,7 @@ julia -e 'using Pkg; Pkg.test()'
 
 ## Architecture Overview
 
-PremedPro AI is a hybrid neuro-symbolic medical AI system with multiple interconnected layers:
+Medical Research AI is a hybrid neuro-symbolic medical AI system with multiple interconnected layers:
 
 ### Core Components
 
@@ -105,7 +105,7 @@ PremedPro AI is a hybrid neuro-symbolic medical AI system with multiple intercon
    - Confidence interval calculations
 
 4. **Medical Agents** (`core/medical_agents/`): Domain-specific AI agents
-   - PremedPro agent for educational assistance
+   - Medical Research agent for clinical analysis assistance
    - Built on OpenSSA framework (`orchestration/openssa/`)
 
 ### Data Flow
@@ -141,7 +141,7 @@ PremedPro AI is a hybrid neuro-symbolic medical AI system with multiple intercon
 2. **Reasoning Strategy Selection**: 
    - High privacy sensitivity → symbolic_first
    - Medical diagnosis keywords → symbolic_first (safety)
-   - Educational queries → neural_first
+   - Research queries → neural_first
    - Complex queries → parallel processing
 
 3. **Safety Mechanisms**:
@@ -151,9 +151,9 @@ PremedPro AI is a hybrid neuro-symbolic medical AI system with multiple intercon
 
 ## Important Development Notes
 
-- **Medical Safety**: This system is for educational purposes only. Never remove medical disclaimers or safety checks.
+- **Medical Safety**: This system is for research purposes only. Never remove medical disclaimers or safety checks.
 - **Privacy First**: All personal data handling must comply with differential privacy settings in ethical_constraints.yaml.
-- **Hybrid Reasoning**: The system is designed to combine symbolic and neural approaches - avoid bypassing either component.
+- **Hybrid Reasoning**: The system is designed to combine symbolic and neural approaches for comprehensive medical research analysis - avoid bypassing either component.
 - **Open Source Integration**: Third-party components maintain their original licenses (see CREDITS.md).
 - **Multi-language**: Python (main), Rust (safety), Julia (math) - ensure compatibility when making changes.
 

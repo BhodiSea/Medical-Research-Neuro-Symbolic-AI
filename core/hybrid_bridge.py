@@ -1,6 +1,6 @@
 """
-Hybrid Bridge for PremedPro AI
-Fuses symbolic and neural reasoning for comprehensive medical AI
+Hybrid Bridge for Medical Research AI
+Fuses symbolic and neural reasoning for comprehensive medical research analysis
 """
 
 from typing import Dict, List, Any, Optional, Tuple, Union
@@ -232,9 +232,9 @@ class HybridReasoningEngine:
         if any(keyword in query.lower() for keyword in diagnosis_keywords):
             return ReasoningMode.SYMBOLIC_FIRST
         
-        # Educational/factual queries → Neural first
-        educational_keywords = ["explain", "what is", "how does", "definition"]
-        if any(keyword in query.lower() for keyword in educational_keywords):
+        # Research/analytical queries → Neural first
+        research_keywords = ["analyze", "research", "compare", "investigate", "examine"]
+        if any(keyword in query.lower() for keyword in research_keywords):
             return ReasoningMode.NEURAL_FIRST
         
         # Complex queries → Parallel

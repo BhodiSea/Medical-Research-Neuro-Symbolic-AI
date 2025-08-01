@@ -1,6 +1,6 @@
 """
-Custom Neural Components for PremedPro AI
-Quantum mechanics-inspired uncertainty models and neural reasoning
+Custom Neural Components for Medical Research AI
+Quantum mechanics-inspired uncertainty models and neural reasoning for medical research
 """
 
 import torch

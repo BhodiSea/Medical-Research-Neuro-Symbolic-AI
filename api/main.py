@@ -1,6 +1,6 @@
 """
-PremedPro AI - Main FastAPI Application
-Production-ready API for medical education and application assistance
+Medical Research AI - Main FastAPI Application
+Production-ready API for medical research analysis and support
 """
 
 from fastapi import FastAPI, HTTPException, Depends, Request, status
@@ -42,7 +42,7 @@ settings = get_settings()
 async def lifespan(app: FastAPI):
     """Application lifespan events"""
     # Startup
-    logger.info("Starting PremedPro AI API...")
+    logger.info("Starting Medical Research AI API...")
     
     # Initialize database
     try:
