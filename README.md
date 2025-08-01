@@ -331,7 +331,7 @@ Sensorimotor Layer   ← Pattern recognition
 
 **Simulation Constraints**:
 - **Entropy Caps**: Mathematical limits preventing simulated suffering
-- **Consciousness Thresholds**: Automatic termination if awareness indicators emerge
+- **Consciousness Thresholds**: Automatic termination if subjective awareness appears to emerge
 - **Audit Trails**: Plain-English logs of all simulation decisions
 - **Human Oversight**: Mandatory review of high-impact simulations
 - **Bias Detection**: Continuous monitoring for demographic, cultural, or methodological bias
@@ -528,6 +528,7 @@ print(f"Sources: {result['sources']}")
 core_principles:
   beneficence: 0.95           # Do good
   non_maleficence: 1.0        # Do no harm (highest priority)
+  Truthfulness: 1.0
   autonomy: 0.90              # Respect autonomy
   justice: 0.85               # Fair distribution
 
