@@ -61,3 +61,34 @@
 [submodule "orchestration/agents/camel_ai"]
 	path = orchestration/agents/camel_ai
 	url = https://github.com/camel-ai/camel.git
+[submodule "core/neural/monai"]
+	path = core/neural/monai
+	url = https://github.com/Project-MONAI/MONAI.git
+[submodule "core/neural/medclip"]
+	path = core/neural/medclip
+	url = https://github.com/RyanWangZf/MEDCLIP.git
+[submodule "core/neural/medpalm"]
+	path = core/neural/medpalm
+	url = https://github.com/med-palm/med-palm.git
+[submodule "core/neural/biobert"]
+	path = core/neural/biobert
+	url = https://github.com/dmis-lab/biobert.git
+[submodule "core/neural/rdkit"]
+	path = core/neural/rdkit
+	url = https://github.com/rdkit/rdkit.git
+[submodule "core/neural/openmm"]
+	path = core/neural/openmm
+	url = https://github.com/openmm/openmm.git
+[submodule "core/neural/autodock"]
+	path = core/neural/autodock
+	url = https://github.com/ccsb-scripps/AutoDock-Vina.git
+[submodule "core/clinical/fhir"]
+	path = core/clinical/fhir
+	url = https://github.com/HL7/fhir.git
+[submodule "core/clinical/omop"]
+	path = core/clinical/omop
+	url = https://github.com/OHDSI/CommonDataModel.git
+[submodule "orchestration/langchain"]
+	path = orchestration/langchain
+	url = https://github.com/langchain-ai/langchain.git
+
