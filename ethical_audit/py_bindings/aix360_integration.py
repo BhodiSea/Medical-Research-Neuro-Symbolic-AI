@@ -8,7 +8,13 @@ import os
 from typing import Dict, Any, List, Optional, Union, Tuple
 from pathlib import Path
 import numpy as np
-import pandas as pd
+
+try:
+    import pandas as pd
+    PANDAS_AVAILABLE = True
+except ImportError:
+    PANDAS_AVAILABLE = False
+    pd = None
 
 # Add AIX360 submodule to path
 aix360_path = Path(__file__).parent / "aix360"
@@ -17,12 +23,11 @@ if str(aix360_path) not in sys.path:
 
 try:
     # Import AIX360 components when available
-    from aix360.algorithms.lime import LIMEExplainer
+    from aix360.algorithms.lime import LimeTabularExplainer, LimeImageExplainer, LimeTextExplainer
     from aix360.algorithms.contrastive import CEMExplainer
     from aix360.algorithms.protodash import ProtodashExplainer
-    from aix360.algorithms.rule_induction import TRXExplainer
-    from aix360.datasets import MEPSDataset19
-    from aix360.metrics import faithfulness_metric, monotonicity_metric
+    from aix360.algorithms.rule_induction.trxf.core import DnfRuleSet, RuleSetGenerator
+    # Note: Some components may not be available in the submodule
     AIX360_AVAILABLE = True
 except ImportError as e:
     print(f"Warning: AIX360 not available: {e}")
@@ -47,7 +52,7 @@ class AIX360Integration:
         """Initialize AIX360 explainers for medical AI interpretation"""
         try:
             # Initialize LIME explainer for local interpretability
-            self.explainers['lime'] = LIMEExplainer()
+            self.explainers['lime'] = LimeTabularExplainer()
             
             # Initialize CEM explainer for contrastive explanations
             self.explainers['cem'] = CEMExplainer()
@@ -55,8 +60,8 @@ class AIX360Integration:
             # Initialize Protodash explainer for prototype-based explanations
             self.explainers['protodash'] = ProtodashExplainer()
             
-            # Initialize TRX explainer for rule-based explanations
-            self.explainers['trx'] = TRXExplainer()
+            # Initialize TRX explainer for rule-based explanations (using RuleSetGenerator)
+            self.explainers['trx'] = RuleSetGenerator()
             
             # Initialize medical-specific metrics
             self._initialize_medical_metrics()
