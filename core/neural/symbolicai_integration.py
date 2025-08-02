@@ -16,9 +16,15 @@ if str(symbolicai_path) not in sys.path:
 try:
     # Import SymbolicAI components when available
     from symai import Symbol, Expression, core
+    from symai.backend.base import Engine
+    from symai.interfaces import Interface
     SYMBOLICAI_AVAILABLE = True
+    print("SymbolicAI successfully loaded")
 except ImportError as e:
     print(f"Warning: SymbolicAI not available: {e}")
+    SYMBOLICAI_AVAILABLE = False
+except Exception as e:
+    print(f"Warning: SymbolicAI error: {e}")
     SYMBOLICAI_AVAILABLE = False
 
 
