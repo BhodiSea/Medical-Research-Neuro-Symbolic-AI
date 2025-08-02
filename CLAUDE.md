@@ -108,7 +108,7 @@ Medical Research AI is a hybrid neuro-symbolic medical AI system with multiple i
 - Multi-modal data processing pipelines (planned)
 - Integration wrappers for symbolic and neural reasoning
 
-**🔴 Planned/Visionary Components:**
+**🔴 Planned Components:**
 - 10th Man deliberation system
 - Internal simulation engines with flash cycles
 - Research timeline acceleration through quantum modeling
@@ -347,7 +347,7 @@ Medical Research AI is a hybrid neuro-symbolic medical AI system with multiple i
 - Integration wrappers for symbolic/neural systems
 - Multi-language component structure
 
-### What's Visionary 🔴
+### What's Planned 🔴
 - 10th Man deliberation system
 - Internal simulation engines
 - Research timeline acceleration
