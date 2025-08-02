@@ -93,6 +93,8 @@ class MONAIIntegration:
     
     def _initialize_monai_systems(self) -> None:
         """Initialize MONAI systems and components - called only when needed."""
+        global MONAI_INITIALIZED
+        
         if MONAI_INITIALIZED:
             return
             
@@ -109,7 +111,6 @@ class MONAIIntegration:
             # Initialize models for different imaging modalities
             self._initialize_models()
             
-            global MONAI_INITIALIZED
             MONAI_INITIALIZED = True
             logger.info("MONAI systems initialized successfully")
             

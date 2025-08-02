@@ -100,6 +100,8 @@ class BioBERTIntegration:
     
     def _initialize_biobert_systems(self) -> None:
         """Initialize BioBERT systems and components - called only when needed."""
+        global BIOBERT_INITIALIZED
+        
         if BIOBERT_INITIALIZED:
             return
             
@@ -126,7 +128,6 @@ class BioBERTIntegration:
             # Initialize classification pipeline
             self._initialize_classification_pipeline()
             
-            global BIOBERT_INITIALIZED
             BIOBERT_INITIALIZED = True
             logger.info(f"BioBERT systems initialized successfully on {self.device}")
             

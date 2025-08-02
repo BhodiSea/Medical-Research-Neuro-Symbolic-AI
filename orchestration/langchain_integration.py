@@ -103,6 +103,8 @@ class LangChainIntegration:
     
     def _initialize_langchain_systems(self) -> None:
         """Initialize LangChain systems and components - called only when needed."""
+        global LANGCHAIN_INITIALIZED
+        
         if LANGCHAIN_INITIALIZED:
             return
             
@@ -122,7 +124,6 @@ class LangChainIntegration:
             # Initialize medical research tools
             self._initialize_medical_tools()
             
-            global LANGCHAIN_INITIALIZED
             LANGCHAIN_INITIALIZED = True
             logger.info("LangChain systems initialized successfully")
             
