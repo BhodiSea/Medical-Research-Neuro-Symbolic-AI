@@ -28,7 +28,6 @@ A hybrid neuro-symbolic AI framework for medical research analysis, focusing on 
 • **📊 Transparency**: Complete audit trails and explainable AI reasoning
 • **🚫 Simulation Limits**: Mathematical caps prevent simulated suffering or consciousness
 • **👥 Human Control**: Medical professionals maintain final authority over all outputs
-• **⏰ Ethical Cooling**: 24-hour mandatory breaks between intensive simulations
 • **🔍 Bias Monitoring**: Continuous fairness assessment across demographics
 • **📋 IRB Compliance**: Research ethics board standards for all investigations
 • **🏥 Professional Validation**: All insights remain subject to peer review and clinical verification
