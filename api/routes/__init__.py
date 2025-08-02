@@ -1,3 +1,3 @@
 """
-API routes for PremedPro AI
+API routes for Medical Research AI
 """ 

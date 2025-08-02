@@ -71,7 +71,7 @@ async def lifespan(app: FastAPI):
             "max_query_length": 5000
         }
         app.state.medical_agent = create_premedpro_agent(config)
-        logger.info("Medical AI agent initialized successfully")
+        logger.info("Medical research AI agent initialized successfully")
     except Exception as e:
         logger.error(f"Medical AI initialization failed: {e}")
         import traceback
@@ -79,12 +79,12 @@ async def lifespan(app: FastAPI):
         # Continue without medical agent for now
         app.state.medical_agent = None
     
-    logger.info("PremedPro AI API startup complete")
+    logger.info("Medical Research AI API startup complete")
     
     yield
     
     # Shutdown
-    logger.info("Shutting down PremedPro AI API...")
+    logger.info("Shutting down Medical Research AI API...")
     
     # Cleanup database connections
     try:
@@ -94,13 +94,13 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error(f"Database cleanup error: {e}")
     
-    logger.info("PremedPro AI API shutdown complete")
+    logger.info("Medical Research AI API shutdown complete")
 
 
 # Create FastAPI application
 app = FastAPI(
-    title="PremedPro AI API",
-    description="AI-powered medical education and application assistance platform",
+    title="Medical Research AI API",
+    description="AI-powered medical research advancement platform",
     version="0.1.0",
     docs_url="/docs" if settings.ENVIRONMENT == "development" else None,
     redoc_url="/redoc" if settings.ENVIRONMENT == "development" else None,
@@ -132,8 +132,8 @@ app.add_middleware(RequestLoggingMiddleware)
 # Exception handlers
 @app.exception_handler(PremedProException)
 async def premedpro_exception_handler(request: Request, exc: PremedProException):
-    """Handle custom PremedPro exceptions"""
-    logger.error(f"PremedPro exception: {exc.detail}")
+    """Handle custom Medical Research AI exceptions"""
+    logger.error(f"Medical Research AI exception: {exc.detail}")
     return JSONResponse(
         status_code=exc.status_code,
         content={
@@ -199,9 +199,9 @@ app.include_router(
 async def root():
     """Root endpoint with API information"""
     return {
-        "name": "PremedPro AI API",
+        "name": "Medical Research AI API",
         "version": "0.1.0",
-        "description": "AI-powered medical education and application assistance platform",
+        "description": "AI-powered medical research advancement platform",
         "status": "operational",
         "documentation": "/docs" if settings.ENVIRONMENT == "development" else "Contact support for API documentation"
     }

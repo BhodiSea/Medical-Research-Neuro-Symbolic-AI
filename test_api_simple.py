@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from datetime import datetime
 
 # Create simple FastAPI app
-app = FastAPI(title="PremedPro AI API Test", version="0.1.0")
+app = FastAPI(title="Medical Research AI API Test", version="0.1.0")
 
 class HealthResponse(BaseModel):
     status: str
@@ -17,7 +17,7 @@ class HealthResponse(BaseModel):
 
 @app.get("/")
 async def root():
-    return {"message": "PremedPro AI API is running!", "status": "ok"}
+    return {"message": "Medical Research AI API is running!", "status": "ok"}
 
 @app.get("/health", response_model=HealthResponse)
 async def health_check():

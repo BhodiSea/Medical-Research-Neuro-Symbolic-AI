@@ -1,5 +1,5 @@
 """
-Custom Logic Integration for PremedPro AI
+Custom Logic Integration for Medical Research AI
 Integrates NSTK, Nucleoid, and PEIRCE for medical reasoning
 """
 
@@ -538,7 +538,7 @@ class MedicalLogicEngine:
         elif classification["primary_category"] == "clinical_presentation":
             return "Educational information about clinical presentations provided for learning purposes only"
         else:
-            return "General medical educational information provided within safety and ethical guidelines"
+            return "General medical research information provided within safety and ethical guidelines"
     
     async def _perform_enhanced_symbolic_reasoning(self, query: str, context: Dict[str, Any]) -> Dict[str, Any]:
         """Perform enhanced symbolic reasoning using SymbolicAI integration"""

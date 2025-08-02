@@ -7,7 +7,7 @@ from typing import Dict, Any, Optional
 
 
 class PremedProException(HTTPException):
-    """Base exception for PremedPro AI"""
+    """Base exception for Medical Research AI"""
     
     def __init__(
         self,

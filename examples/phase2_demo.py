@@ -160,8 +160,8 @@ async def demo_enhanced_ethics():
         return None
 
 async def demo_premedpro_agent():
-    """Demonstrate the PremedPro medical agent"""
-    print_section("PremedPro Medical AI Agent")
+    """Demonstrate the Medical Research agent"""
+    print_section("Medical Research AI Agent")
     
     try:
         from core.medical_agents.premedpro_agent import (
@@ -170,7 +170,7 @@ async def demo_premedpro_agent():
         
         # Create agent
         agent = create_premedpro_agent()
-        print("✅ PremedPro medical agent initialized")
+        print("✅ Medical Research agent initialized")
         
         # Test queries
         test_queries = [
@@ -238,7 +238,7 @@ async def demo_premedpro_agent():
         return agent
         
     except ImportError as e:
-        print(f"❌ PremedPro agent unavailable: {e}")
+        print(f"❌ Medical Research agent unavailable: {e}")
         return None
 
 async def demo_openssa_integration():
@@ -333,14 +333,14 @@ def demo_phase2_achievements():
     
     achievements = [
         "🔬 Medical Knowledge Graph - Structured medical domain knowledge",
-        "🤖 PremedPro AI Agent - Educational and clinical reasoning support",
+        "🤖 Medical Research AI Agent - Research advancement and clinical reasoning support",
         "🛡️ Enhanced Ethics Engine - Sophisticated medical ethics evaluation",
         "🔗 OpenSSA Integration - Production-grade agent framework",
         "🔀 Hybrid Reasoning - Multi-modal AI decision making",
         "📚 LlamaIndex RAG - Document processing and knowledge retrieval",
         "🏥 Medical Domain Focus - Specialized for healthcare education",
         "⚖️ Ethical Compliance - Built-in safety and ethical oversight",
-        "🎓 Educational Support - Tailored for medical education",
+        "🎓 Research Support - Tailored for medical research advancement",
         "🔧 Extensible Architecture - Ready for production deployment"
     ]
     
@@ -356,7 +356,7 @@ def demo_phase2_achievements():
 
 async def main():
     """Main Phase 2 demonstration"""
-    print_header("PremedPro AI - Phase 2 Deep Integration Demo", "🌟")
+    print_header("Medical Research AI - Phase 2 Deep Integration Demo", "🌟")
     
     print("\n🎯 Demonstrating Advanced Medical AI Capabilities:")
     print("   • Medical Knowledge Graphs")
@@ -406,7 +406,7 @@ async def main():
         print("\n🔧 Some components need attention")
         print("   Check dependencies and configurations")
     
-    print(f"\n🎓 PremedPro AI is ready to revolutionize medical education!")
+    print(f"\n🎓 Medical Research AI is ready to revolutionize medical research!")
 
 if __name__ == "__main__":
     asyncio.run(main()) 

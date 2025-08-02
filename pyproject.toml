@@ -3,10 +3,10 @@ requires = ["setuptools>=70.0.0", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "premedpro-ai"
+name = "medical-research-ai"
 version = "0.1.0"
 authors = [
-    {name = "PremedPro AI Team", email = "team@premedpro-ai.com"},
+    {name = "Medical Research AI Team", email = "team@medical-research-ai.com"},
 ]
 description = "Hybrid Neuro-Symbolic Medical AI System"
 readme = "README.md"
@@ -145,13 +145,13 @@ all = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/premedpro-ai/premedpro-ai"
-Documentation = "https://docs.premedpro-ai.com"
-Repository = "https://github.com/premedpro-ai/premedpro-ai.git"
-Issues = "https://github.com/premedpro-ai/premedpro-ai/issues"
+    Homepage = "https://github.com/medical-research-ai/medical-research-ai"
+    Documentation = "https://docs.medical-research-ai.com"
+    Repository = "https://github.com/medical-research-ai/medical-research-ai.git"
+    Issues = "https://github.com/medical-research-ai/medical-research-ai/issues"
 
 [project.scripts]
-premedpro-ai = "core.hybrid_bridge:main"
+medical-research-ai = "core.hybrid_bridge:main"
 ethical-audit = "ethical_audit.main:main"
 
 [tool.setuptools.packages.find]

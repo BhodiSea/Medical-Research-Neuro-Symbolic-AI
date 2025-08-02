@@ -2,8 +2,8 @@
 name = "ethical_audit"
 version = "0.1.0"
 edition = "2021"
-authors = ["PremedPro AI Team"]
-description = "Ethical audit layer for PremedPro AI with safety and privacy enforcement"
+authors = ["Medical Research AI Team"]
+description = "Ethical audit layer for Medical Research AI with safety and privacy enforcement"
 license = "MIT"
 
 [dependencies]

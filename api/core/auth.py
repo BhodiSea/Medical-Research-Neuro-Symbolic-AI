@@ -1,5 +1,5 @@
 """
-Authentication and authorization for PremedPro AI API
+Authentication and authorization for Medical Research AI API
 """
 
 from fastapi import Depends, HTTPException, status, Request

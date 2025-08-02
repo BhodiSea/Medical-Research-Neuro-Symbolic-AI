@@ -2,7 +2,7 @@
 
 ## Overview
 
-The mathematical foundation integration connects Julia quantum models and AutoDock visualization to the core PremedPro AI system, providing enhanced uncertainty quantification and molecular analysis capabilities.
+The mathematical foundation integration connects Julia quantum models and AutoDock visualization to the core Medical Research AI system, providing enhanced uncertainty quantification and molecular analysis capabilities.
 
 ## Architecture Components
 

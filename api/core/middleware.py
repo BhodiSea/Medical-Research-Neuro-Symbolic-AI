@@ -1,5 +1,5 @@
 """
-Middleware for PremedPro AI API
+Middleware for Medical Research AI API
 """
 
 from fastapi import Request, Response

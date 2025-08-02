@@ -1,5 +1,5 @@
 """
-Health check endpoints for PremedPro AI API
+Health check endpoints for Medical Research AI API
 """
 
 from fastapi import APIRouter, Request, Depends

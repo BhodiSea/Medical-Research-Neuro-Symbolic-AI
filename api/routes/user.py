@@ -1,5 +1,5 @@
 """
-User management endpoints for PremedPro AI API
+User management endpoints for Medical Research AI API
 """
 
 from fastapi import APIRouter, HTTPException, Depends, Request, status

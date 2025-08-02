@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-PremedPro Medical AI Agent
-Uses OpenSSA framework for medical education and clinical reasoning assistance
+Medical Research AI Agent
+Uses OpenSSA framework for medical research advancement and clinical reasoning assistance
 """
 
 import logging
@@ -93,7 +93,7 @@ class MedicalReasoningPlan:
         """Plan for educational support tasks"""
         return {
             "name": "medical_education",
-            "description": "Provide medical education and learning support",
+            "description": "Provide medical research advancement support",
             "steps": [
                 {
                     "name": "topic_analysis",
@@ -122,7 +122,7 @@ class MedicalReasoningPlan:
             ]
         }
 
-class PremedProAgent:
+class MedicalResearchAgent:
     """Main medical AI agent using OpenSSA framework"""
     
     def __init__(self, config: Optional[Dict[str, Any]] = None):
@@ -139,7 +139,7 @@ class PremedProAgent:
     def _get_default_config(self) -> Dict[str, Any]:
         """Get default configuration for the agent"""
         return {
-            "agent_name": "PremedPro Medical Assistant",
+            "agent_name": "Medical Research Assistant",
             "safety_mode": "high",
             "educational_focus": True,
             "clinical_assistance": True,
@@ -150,7 +150,7 @@ class PremedProAgent:
     
     def _initialize_components(self):
         """Initialize agent components"""
-        self.logger.info("Initializing PremedPro Medical Agent...")
+        self.logger.info("Initializing Medical Research Agent...")
         
         # Initialize knowledge graph
         if MEDICAL_KB_AVAILABLE:
@@ -403,7 +403,7 @@ class PremedProAgent:
         """Build fallback educational response"""
         return (
             f"Educational Topic: {query.query_text}\n\n"
-            "I can provide general medical education support. For detailed information about "
+            "I can provide general medical research support. For detailed information about "
             "specific medical topics, please consult medical textbooks, peer-reviewed journals, "
             "and discuss with your medical instructors.\n\n"
             "**Educational Reminder**: Always verify medical information with authoritative sources "
@@ -486,11 +486,11 @@ class PremedProAgent:
             "ready_for_queries": True
         }
 
-def create_premedpro_agent(config: Optional[Dict[str, Any]] = None) -> PremedProAgent:
-    """Factory function to create PremedPro medical agent"""
-    logger.info("Creating PremedPro medical agent...")
-    agent = PremedProAgent(config)
-    logger.info("PremedPro medical agent created successfully")
+def create_premedpro_agent(config: Optional[Dict[str, Any]] = None) -> MedicalResearchAgent:
+    """Factory function to create Medical Research agent"""
+    logger.info("Creating Medical Research agent...")
+    agent = MedicalResearchAgent(config)
+    logger.info("Medical Research agent created successfully")
     return agent
 
 # Example usage and testing
@@ -500,7 +500,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     
     async def demo():
-        print("🏥 PremedPro Medical Agent Demo")
+        print("🏥 Medical Research Agent Demo")
         print("=" * 40)
         
         # Create agent

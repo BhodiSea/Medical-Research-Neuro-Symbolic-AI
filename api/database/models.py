@@ -1,5 +1,5 @@
 """
-Database models for PremedPro AI API
+Database models for Medical Research AI API
 """
 
 from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, Float, ForeignKey, JSON

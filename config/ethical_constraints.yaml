@@ -1,5 +1,5 @@
 # Ethical Constraints Configuration
-# This file defines the ethical rules and constraints for the PremedPro AI system
+# This file defines the ethical rules and constraints for the Medical Research AI system
 
 version: "1.0"
 updated: "2024-01-01"

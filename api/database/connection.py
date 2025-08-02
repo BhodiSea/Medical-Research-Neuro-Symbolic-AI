@@ -1,5 +1,5 @@
 """
-Database connection management for PremedPro AI API
+Database connection management for Medical Research AI API
 """
 
 from sqlalchemy import create_engine

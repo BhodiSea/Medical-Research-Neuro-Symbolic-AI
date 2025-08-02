@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 def main():
     """Main demonstration function"""
-    print("🧠 PremedPro AI - Basic Usage Example")
+    print("🧠 Medical Research AI - Basic Usage Example")
     print("=" * 50)
     
     # Example 1: Symbolic Reasoning

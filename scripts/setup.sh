@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #=============================================================================
-# PremedPro AI Setup Script
+# Medical Research AI Setup Script
 # Initializes the development environment for the hybrid neuro-symbolic AI system
 #=============================================================================
 
@@ -353,7 +353,7 @@ setup_database() {
 
 # Print summary and next steps
 print_summary() {
-    log_success "PremedPro AI setup complete!"
+    log_success "Medical Research AI setup complete!"
     echo
     echo "=== Environment Summary ==="
     echo "Python: ✓ $(python3 --version)"
@@ -389,7 +389,7 @@ print_summary() {
 
 # Main execution
 main() {
-    echo "=== PremedPro AI Development Environment Setup ==="
+    echo "=== Medical Research AI Development Environment Setup ==="
     echo
     
     check_requirements

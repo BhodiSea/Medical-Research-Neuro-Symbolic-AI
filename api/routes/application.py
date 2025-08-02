@@ -1,5 +1,5 @@
 """
-Application review endpoints for PremedPro AI API
+Application review endpoints for Medical Research AI API
 """
 
 from fastapi import APIRouter, HTTPException, Depends, Request, status
@@ -35,7 +35,7 @@ async def review_application_component(
     
     try:
         # TODO: Implement actual application review using our medical AI
-        # - Process the content with our PremedPro agent
+        # - Process the content with our Medical Research agent
         # - Analyze against medical school requirements
         # - Generate specific feedback and suggestions
         

@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     )
     
     # Basic application settings
-    APP_NAME: str = "PremedPro AI API"
+    APP_NAME: str = "Medical Research AI API"
     APP_VERSION: str = "0.1.0"
     ENVIRONMENT: str = "development"
     DEBUG: bool = False
@@ -39,7 +39,7 @@ class Settings(BaseSettings):
     ALLOWED_HOSTS: List[str] = ["localhost", "127.0.0.1"]
     
     # Database settings
-    DATABASE_URL: str = "sqlite:///./premedpro_ai.db"
+    DATABASE_URL: str = "sqlite:///./medical_research_ai.db"
     DATABASE_POOL_SIZE: int = 5
     DATABASE_MAX_OVERFLOW: int = 10
     DATABASE_POOL_TIMEOUT: int = 30

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Simple script to run the PremedPro AI API for development and testing
+Simple script to run the Medical Research AI API for development and testing
 """
 
 import sys
@@ -19,7 +19,7 @@ def main():
     os.environ.setdefault("ENVIRONMENT", "development")
     os.environ.setdefault("LOG_LEVEL", "INFO")
     
-    print("🚀 Starting PremedPro AI API...")
+    print("🚀 Starting Medical Research AI API...")
     print("📍 Environment: Development")
     print("🔗 API will be available at: http://localhost:8000")
     print("📚 API documentation at: http://localhost:8000/docs")
@@ -37,7 +37,7 @@ def main():
             access_log=True
         )
     except KeyboardInterrupt:
-        print("\n👋 Shutting down PremedPro AI API...")
+        print("\n👋 Shutting down Medical Research AI API...")
     except Exception as e:
         print(f"❌ Error starting API: {e}")
         sys.exit(1)

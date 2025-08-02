@@ -1,5 +1,5 @@
 """
-Logging configuration for PremedPro AI API
+Logging configuration for Medical Research AI API
 """
 
 import logging

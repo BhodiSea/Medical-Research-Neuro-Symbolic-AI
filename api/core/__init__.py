@@ -1,3 +1,3 @@
 """
-Core utilities and configuration for PremedPro AI API
+Core utilities and configuration for Medical Research AI API
 """ 

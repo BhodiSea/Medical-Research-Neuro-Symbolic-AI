@@ -126,7 +126,7 @@ def demonstrate_hybrid_capabilities():
 
 def main():
     """Main demo function"""
-    print("🚀 PremedPro AI - OSS Integration Demo")
+    print("🚀 Medical Research AI - OSS Integration Demo")
     print("=" * 50)
     
     test_repository_structure()

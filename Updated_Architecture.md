@@ -1,4 +1,4 @@
-premedpro-ai/  # Root: Consolidated monorepo for Dharma Engine in Premedpro
+medical-research-ai/  # Root: Consolidated monorepo for Dharma Engine in Medical Research
 ├── .git/  # Git repo (with submodules for OSS)
 ├── .gitignore  # Ignore build artifacts, venvs, etc.
 ├── README.md  # Overview, setup, phasing (middleman to independent), new features explained
@@ -49,7 +49,7 @@ premedpro-ai/  # Root: Consolidated monorepo for Dharma Engine in Premedpro
 │   │   ├── api_wrappers.py  # Clients for Grok4, GPT-4, Claude4, Gemini 2.5
 │   │   └── query_orchestrator.py  # Logic for generating/processing queries (e.g., ethics topics first)
 │   ├── phase_manager.py  # Custom: Switch from middleman (query-heavy) to independent (sim/memory-only)
-│   ├── api_endpoints.py  # Custom: FastAPI for premedpro integration
+│   ├── api_endpoints.py  # Custom: FastAPI for medical research integration
 │   └── **simulation/**  # **New: For long-term ethical memory via human life simulations**
 │       ├── life_simulator.py  # Core sim generator (text-based narratives, inspired by Keleth PoC)
 │       ├── ethical_distiller.py  # Extracts lessons from sims into memory (entropy-based)

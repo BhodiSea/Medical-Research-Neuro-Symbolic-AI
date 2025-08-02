@@ -1,5 +1,5 @@
 """
-Rate limiting utilities for PremedPro AI API
+Rate limiting utilities for Medical Research AI API
 """
 
 from fastapi import Request

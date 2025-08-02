@@ -1,5 +1,5 @@
 /*!
-Ethical Audit System for PremedPro AI
+Ethical Audit System for Medical Research AI
 Main entry point for standalone operation
 */
 

@@ -1,5 +1,5 @@
 /*!
-Ethical Audit Library for PremedPro AI
+Ethical Audit Library for Medical Research AI
 Provides safety, privacy, and ethical oversight capabilities
 */
 

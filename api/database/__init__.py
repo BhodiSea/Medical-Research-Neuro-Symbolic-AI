@@ -1,3 +1,3 @@
 """
-Database layer for PremedPro AI API
+Database layer for Medical Research AI API
 """ 
