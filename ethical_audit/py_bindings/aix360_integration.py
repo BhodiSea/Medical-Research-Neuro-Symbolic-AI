@@ -23,11 +23,11 @@ if str(aix360_path) not in sys.path:
 
 try:
     # Import AIX360 components when available
+    # Use a more conservative import approach to avoid TensorFlow issues
     from aix360.algorithms.lime import LimeTabularExplainer, LimeImageExplainer, LimeTextExplainer
-    from aix360.algorithms.contrastive import CEMExplainer
     from aix360.algorithms.protodash import ProtodashExplainer
     from aix360.algorithms.rule_induction.trxf.core import DnfRuleSet, RuleSetGenerator
-    # Note: Some components may not be available in the submodule
+    # Note: CEMExplainer requires TensorFlow, so we'll skip it for now
     AIX360_AVAILABLE = True
 except ImportError as e:
     print(f"Warning: AIX360 not available: {e}")
@@ -54,14 +54,14 @@ class AIX360Integration:
             # Initialize LIME explainer for local interpretability
             self.explainers['lime'] = LimeTabularExplainer()
             
-            # Initialize CEM explainer for contrastive explanations
-            self.explainers['cem'] = CEMExplainer()
-            
             # Initialize Protodash explainer for prototype-based explanations
             self.explainers['protodash'] = ProtodashExplainer()
             
             # Initialize TRX explainer for rule-based explanations (using RuleSetGenerator)
             self.explainers['trx'] = RuleSetGenerator()
+            
+            # Note: CEM explainer requires TensorFlow and may cause lock blocking issues
+            # We'll use mock implementation for contrastive explanations
             
             # Initialize medical-specific metrics
             self._initialize_medical_metrics()
@@ -91,7 +91,8 @@ class AIX360Integration:
             if explanation_type == "lime":
                 return self._lime_explanation(model, data, feature_names, target_names)
             elif explanation_type == "cem":
-                return self._cem_explanation(model, data, feature_names, target_names)
+                # Use mock implementation for CEM due to TensorFlow dependency issues
+                return self._mock_medical_explanation(data, feature_names, target_names, "cem")
             elif explanation_type == "protodash":
                 return self._protodash_explanation(model, data, feature_names, target_names)
             elif explanation_type == "trx":
