@@ -244,6 +244,9 @@ class DeepChemIntegration:
             return self._mock_prediction(model, smiles_list)
         
         try:
+            # Import DeepChem data module only when needed
+            from deepchem import data
+            
             # Create dataset for prediction
             dataset = data.NumpyDataset(X=smiles_list)
             
