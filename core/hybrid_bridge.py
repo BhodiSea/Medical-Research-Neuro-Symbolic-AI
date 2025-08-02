@@ -11,9 +11,8 @@ from enum import Enum
 import sys
 from pathlib import Path
 
-# Import custom components
-from .symbolic.custom_logic import MedicalLogicEngine
-from .neural.custom_neural import MedicalNeuralReasoner, HybridNeuralSymbolic
+# Import custom components - use factory functions to avoid circular imports
+# Note: We'll import these in the initialize method to avoid import issues
 
 # Import mathematical foundation components
 try:
@@ -95,7 +94,8 @@ class HybridReasoningEngine:
             if MATH_FOUNDATION_AVAILABLE:
                 self._initialize_mathematical_foundation()
             
-            # Create hybrid bridge
+            # Create hybrid bridge - import here to avoid circular imports
+            from .neural.custom_neural import HybridNeuralSymbolic
             self.hybrid_bridge = HybridNeuralSymbolic(
                 self.neural_reasoner, 
                 self.symbolic_engine
@@ -332,24 +332,32 @@ class HybridReasoningEngine:
         )
     
     def _create_hybrid_result(self, query: str, fused_result: Dict[str, Any], reasoning_path: List[str]) -> ReasoningResult:
-        """Create ReasoningResult from hybrid reasoning with mathematical foundation integration"""
+        """Create ReasoningResult from functional hybrid reasoning with enhanced integration"""
         neural_result = fused_result.get("neural_reasoning", {})
         symbolic_result = fused_result.get("symbolic_reasoning", {})
         
-        # Calculate contribution weights
+        # FUNCTIONAL: Extract actual confidence values from enhanced components
         neural_conf = neural_result.get("model_confidence", 0.0)
         symbolic_conf = symbolic_result.get("confidence", 0.0)
-        total_conf = neural_conf + symbolic_conf
         
+        # Enhanced confidence calculation using both numeric and categorical assessments
+        base_confidence = fused_result.get("fused_confidence", 0.0)
+        
+        # Calculate contribution weights with knowledge graph boost
+        knowledge_boost = 0.15 if symbolic_result.get("knowledge_graph_results") else 0.0
+        symbolic_conf_adjusted = symbolic_conf + knowledge_boost
+        
+        total_conf = neural_conf + symbolic_conf_adjusted
         if total_conf > 0:
             neural_contrib = neural_conf / total_conf
-            symbolic_contrib = symbolic_conf / total_conf
+            symbolic_contrib = symbolic_conf_adjusted / total_conf
         else:
-            neural_contrib = 0.5
-            symbolic_contrib = 0.5
+            # Default to symbolic priority for medical safety
+            neural_contrib = 0.3
+            symbolic_contrib = 0.7
         
-        # Get base confidence
-        base_confidence = fused_result.get("fused_confidence", 0.0)
+        # Enhanced safety assessment using actual reasoning results
+        ethical_compliance = self._assess_comprehensive_safety(symbolic_result, neural_result)
         
         # Apply quantum uncertainty quantification
         quantum_result = self._apply_quantum_uncertainty(base_confidence, fused_result)
@@ -357,30 +365,41 @@ class HybridReasoningEngine:
         # Apply molecular analysis if relevant
         molecular_result = self._apply_molecular_analysis(query, fused_result)
         
-        # Calculate enhanced uncertainty bounds using quantum methods
-        uncertainty_bounds = self._calculate_uncertainty_bounds(base_confidence, fused_result)
+        # Calculate enhanced uncertainty bounds using actual neural uncertainty
+        uncertainty_bounds = self._calculate_enhanced_uncertainty_bounds(base_confidence, neural_result, symbolic_result)
         
-        # Enhance final answer with mathematical foundation results
-        enhanced_answer = fused_result.get("fused_result", {})
+        # Create comprehensive final answer from actual reasoning results
+        enhanced_answer = self._create_comprehensive_answer(query, fused_result, neural_result, symbolic_result)
         enhanced_answer.update({
             "quantum_uncertainty": quantum_result,
             "molecular_analysis": molecular_result,
             "mathematical_foundation": {
                 "julia_available": self.math_foundation is not None and self.math_foundation.initialized,
                 "autodock_available": self.autodock_integration is not None
+            },
+            "reasoning_integration": {
+                "symbolic_method": symbolic_result.get("method", "unknown"),
+                "neural_torchlogic_used": neural_result.get("torchlogic_used", False),
+                "knowledge_graph_entities": len(symbolic_result.get("knowledge_graph_results", [])),
+                "interpretability_available": neural_result.get("interpretability", {}) != {}
             }
         })
+        
+        # Enhanced interpretability score considering actual neural interpretability
+        neural_interpretability = self._calculate_neural_interpretability(neural_result)
+        symbolic_interpretability = 0.95  # Symbolic reasoning is highly interpretable
+        overall_interpretability = symbolic_interpretability * symbolic_contrib + neural_interpretability * neural_contrib
         
         return ReasoningResult(
             query=query,
             final_answer=enhanced_answer,
-            confidence=base_confidence,
-            reasoning_path=reasoning_path,
+            confidence=min(base_confidence, 0.95),  # Cap confidence for medical safety
+            reasoning_path=reasoning_path + self._extract_detailed_reasoning_path(symbolic_result, neural_result),
             symbolic_contribution=symbolic_contrib,
             neural_contribution=neural_contrib,
-            ethical_compliance=symbolic_result.get("ethical_assessment", {}).get("medically_appropriate", True),
+            ethical_compliance=ethical_compliance,
             uncertainty_bounds=uncertainty_bounds,
-            interpretability_score=0.7 * symbolic_contrib + 0.3 * neural_contrib
+            interpretability_score=overall_interpretability
         )
     
     def _create_error_result(self, query: str, error_message: str) -> ReasoningResult:
@@ -548,6 +567,177 @@ class HybridReasoningEngine:
             sensitivity_score += 2
         
         return min(sensitivity_score / 5.0, 1.0)
+    
+    def _assess_comprehensive_safety(self, symbolic_result: Dict[str, Any], neural_result: Dict[str, Any]) -> bool:
+        """Assess comprehensive safety using both symbolic and neural reasoning results"""
+        # Symbolic safety assessment
+        symbolic_safety = symbolic_result.get("ethical_assessment", {}).get("medically_appropriate", True)
+        symbolic_status = symbolic_result.get("status", "")
+        
+        # Neural safety assessment
+        neural_ethical_score = neural_result.get("ethical_score", 1.0)
+        neural_decision = neural_result.get("medical_logic_decision", {}).get("safety_assessment", {})
+        neural_is_safe = neural_decision.get("is_safe", True)
+        
+        # Combined safety assessment - prioritize most conservative
+        if symbolic_status in ["blocked", "emergency_redirect"]:
+            return False  # Symbolic safety rules override
+        
+        if not symbolic_safety or not neural_is_safe:
+            return False
+        
+        if neural_ethical_score < 0.7:
+            return False  # Neural ethics threshold
+        
+        return True
+    
+    def _calculate_neural_interpretability(self, neural_result: Dict[str, Any]) -> float:
+        """Calculate interpretability score from neural reasoning results"""
+        interpretability_data = neural_result.get("interpretability", {})
+        
+        if not interpretability_data or interpretability_data.get("error"):
+            return 0.3  # Low interpretability for failed neural analysis
+        
+        # Extract actual interpretability metrics
+        interp_score = interpretability_data.get("interpretability_score", 0.5)
+        
+        # Factor in TorchLogic usage (more interpretable)
+        torchlogic_used = neural_result.get("torchlogic_used", False)
+        if torchlogic_used:
+            interp_score += 0.2
+        
+        # Factor in medical logic decision availability
+        medical_decision = neural_result.get("medical_logic_decision", {})
+        if medical_decision:
+            interp_score += 0.15
+        
+        return min(interp_score, 1.0)
+    
+    def _extract_detailed_reasoning_path(self, symbolic_result: Dict[str, Any], neural_result: Dict[str, Any]) -> List[str]:
+        """Extract detailed reasoning path from actual component results"""
+        detailed_path = []
+        
+        # Add symbolic reasoning steps
+        symbolic_steps = symbolic_result.get("reasoning_steps", [])
+        if symbolic_steps:
+            detailed_path.extend([f"symbolic: {step}" for step in symbolic_steps[:3]])  # Top 3 steps
+        
+        # Add neural reasoning insights
+        neural_type = neural_result.get("reasoning_type", "")
+        if neural_type:
+            detailed_path.append(f"neural: {neural_type} processing")
+        
+        # Add knowledge graph information
+        kg_results = symbolic_result.get("knowledge_graph_results", [])
+        if kg_results:
+            detailed_path.append(f"knowledge_graph: found {len(kg_results)} relevant entities")
+        
+        # Add neural logic information
+        medical_decision = neural_result.get("medical_logic_decision", {})
+        if medical_decision:
+            primary_decision = medical_decision.get("primary_decision", "unknown")
+            detailed_path.append(f"neural_logic: decision={primary_decision}")
+        
+        return detailed_path
+    
+    def _create_comprehensive_answer(self, query: str, fused_result: Dict[str, Any], neural_result: Dict[str, Any], symbolic_result: Dict[str, Any]) -> Dict[str, Any]:
+        """Create comprehensive answer from functional reasoning components"""
+        answer = {
+            "query": query,
+            "reasoning_method": "functional_hybrid_neuro_symbolic",
+            "response_type": "comprehensive_analysis"
+        }
+        
+        # Add symbolic reasoning insights
+        if symbolic_result.get("result"):
+            answer["educational_content"] = symbolic_result["result"]
+        
+        # Add knowledge graph findings
+        kg_results = symbolic_result.get("knowledge_graph_results", [])
+        if kg_results:
+            answer["knowledge_entities"] = kg_results[:5]  # Top 5 entities
+        
+        # Add neural analysis
+        if neural_result.get("neural_prediction"):
+            answer["neural_analysis"] = {
+                "prediction_vector": neural_result["neural_prediction"][:5],  # First 5 values
+                "model_confidence": neural_result.get("model_confidence", 0.0)
+            }
+        
+        # Add medical logic decision
+        medical_decision = neural_result.get("medical_logic_decision", {})
+        if medical_decision:
+            answer["medical_assessment"] = {
+                "primary_decision": medical_decision.get("primary_decision", "unknown"),
+                "safety_score": medical_decision.get("safety_assessment", {}).get("overall_safety_score", 0.0),
+                "activated_rules": medical_decision.get("activated_rules", [])[:3]  # Top 3 rules
+            }
+        
+        # Add uncertainty information
+        if neural_result.get("uncertainty"):
+            uncertainty_values = neural_result["uncertainty"]
+            if isinstance(uncertainty_values, list) and uncertainty_values:
+                answer["uncertainty_quantification"] = {
+                    "mean_uncertainty": sum(uncertainty_values) / len(uncertainty_values),
+                    "max_uncertainty": max(uncertainty_values),
+                    "confidence_intervals": neural_result.get("confidence_intervals", {})
+                }
+        
+        # Add safety warnings
+        warnings = []
+        warnings.extend(symbolic_result.get("warnings", []))
+        if neural_result.get("medical_logic_decision", {}).get("safety_assessment", {}).get("needs_review"):
+            warnings.append("Neural analysis indicates professional review recommended")
+        
+        if warnings:
+            answer["safety_warnings"] = warnings
+        
+        # Add medical disclaimer
+        answer["medical_disclaimer"] = (
+            "This analysis is for educational and research purposes only. "
+            "Always consult qualified healthcare professionals for medical decisions. "
+            "Individual cases may vary significantly from general medical knowledge."
+        )
+        
+        return answer
+    
+    def _calculate_enhanced_uncertainty_bounds(self, base_confidence: float, neural_result: Dict[str, Any], symbolic_result: Dict[str, Any]) -> Optional[Tuple[float, float]]:
+        """Calculate enhanced uncertainty bounds using actual neural uncertainty data"""
+        try:
+            # Use actual neural uncertainty if available
+            neural_uncertainty = neural_result.get("uncertainty", [])
+            if neural_uncertainty and isinstance(neural_uncertainty, list):
+                avg_neural_uncertainty = sum(neural_uncertainty) / len(neural_uncertainty)
+            else:
+                avg_neural_uncertainty = 0.2  # Default uncertainty
+            
+            # Factor in symbolic reasoning uncertainty
+            symbolic_uncertainty_factors = symbolic_result.get("uncertainty_factors", [])
+            symbolic_uncertainty = 0.1 + (len(symbolic_uncertainty_factors) * 0.05)  # Base + factors
+            
+            # Combined uncertainty (weighted by contribution)
+            neural_weight = 0.3
+            symbolic_weight = 0.7
+            combined_uncertainty = (neural_weight * avg_neural_uncertainty + 
+                                  symbolic_weight * symbolic_uncertainty)
+            
+            # Apply quantum uncertainty if available
+            if self.math_foundation and self.math_foundation.initialized:
+                quantum_result = self._apply_quantum_uncertainty(base_confidence, {"neural_result": neural_result})
+                quantum_uncertainty = quantum_result.get("quantum_uncertainty", 0.0)
+                combined_uncertainty = max(combined_uncertainty, quantum_uncertainty)
+            
+            # Calculate bounds
+            lower_bound = max(0.0, base_confidence - combined_uncertainty)
+            upper_bound = min(1.0, base_confidence + combined_uncertainty)
+            
+            return (lower_bound, upper_bound)
+            
+        except Exception as e:
+            logger.warning(f"Enhanced uncertainty bounds calculation failed: {e}")
+            # Fallback to simple calculation
+            uncertainty = 1.0 - base_confidence
+            return (max(0.0, base_confidence - uncertainty), min(1.0, base_confidence + uncertainty))
     
     def get_system_status(self) -> Dict[str, Any]:
         """Get comprehensive system status"""

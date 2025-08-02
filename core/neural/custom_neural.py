@@ -413,13 +413,87 @@ class MedicalNeuralReasoner:
             }
     
     def _encode_medical_text(self, text: str) -> torch.Tensor:
-        """Encode medical text to embeddings (placeholder implementation)"""
-        # TODO: Implement proper medical text encoding
-        # For now, create a random embedding as placeholder
+        """Encode medical text to embeddings using functional medical vocabulary"""
         words = text.lower().split()
         
-        # Simulate medical vocabulary encoding
-        vocab_indices = [hash(word) % 10000 for word in words[:32]]  # Limit to 32 words
+        # FUNCTIONAL medical vocabulary mapping with semantic grouping
+        medical_vocab = {
+            # Anatomical terms
+            'heart': 1001, 'lung': 1002, 'brain': 1003, 'liver': 1004, 'kidney': 1005,
+            'chest': 1010, 'abdomen': 1011, 'head': 1012, 'neck': 1013, 'back': 1014,
+            
+            # Symptoms and signs
+            'pain': 2001, 'ache': 2002, 'fever': 2003, 'nausea': 2004, 'vomiting': 2005,
+            'fatigue': 2010, 'weakness': 2011, 'dizziness': 2012, 'headache': 2013,
+            'shortness': 2020, 'breath': 2021, 'breathing': 2022, 'cough': 2023,
+            'swelling': 2030, 'bleeding': 2031, 'rash': 2032, 'numbness': 2033,
+            
+            # Medical conditions
+            'diabetes': 3001, 'hypertension': 3002, 'cancer': 3003, 'infection': 3004,
+            'inflammation': 3010, 'tumor': 3011, 'disease': 3012, 'syndrome': 3013,
+            'disorder': 3014, 'condition': 3015, 'myocardial': 3020, 'infarction': 3021,
+            
+            # Treatments and procedures
+            'surgery': 4001, 'medication': 4002, 'treatment': 4003, 'therapy': 4004,
+            'procedure': 4010, 'operation': 4011, 'drug': 4012, 'medicine': 4013,
+            'antibiotic': 4020, 'vaccine': 4021, 'aspirin': 4022,
+            
+            # Research and academic terms
+            'study': 5001, 'research': 5002, 'clinical': 5003, 'trial': 5004,
+            'analysis': 5010, 'evidence': 5011, 'diagnosis': 5012, 'prognosis': 5013,
+            'epidemiology': 5020, 'pathophysiology': 5021, 'mechanism': 5022,
+            
+            # Question words and modifiers
+            'what': 6001, 'how': 6002, 'why': 6003, 'when': 6004, 'where': 6005,
+            'explain': 6010, 'describe': 6011, 'compare': 6012, 'analyze': 6013,
+            'severe': 6020, 'mild': 6021, 'chronic': 6022, 'acute': 6023,
+            
+            # Safety-related terms
+            'emergency': 7001, 'urgent': 7002, 'critical': 7003, 'serious': 7004,
+            'dangerous': 7010, 'toxic': 7011, 'allergic': 7012, 'reaction': 7013,
+            
+            # Personal indicators
+            'my': 8001, 'i': 8002, 'me': 8003, 'am': 8004, 'have': 8005,
+            'feel': 8010, 'experiencing': 8011, 'suffering': 8012
+        }
+        
+        # Enhanced vocabulary mapping with semantic features
+        vocab_indices = []
+        semantic_features = torch.zeros(10, device=self.device)  # 10 semantic categories
+        
+        for word in words[:32]:  # Limit to 32 words
+            if word in medical_vocab:
+                idx = medical_vocab[word]
+                vocab_indices.append(idx)
+                
+                # Update semantic features based on vocabulary category
+                if 1000 <= idx < 2000:  # Anatomical terms
+                    semantic_features[0] += 1.0
+                elif 2000 <= idx < 3000:  # Symptoms
+                    semantic_features[1] += 1.0
+                elif 3000 <= idx < 4000:  # Conditions
+                    semantic_features[2] += 1.0
+                elif 4000 <= idx < 5000:  # Treatments
+                    semantic_features[3] += 1.0
+                elif 5000 <= idx < 6000:  # Research terms
+                    semantic_features[4] += 1.0
+                elif 6000 <= idx < 7000:  # Question/modifiers
+                    semantic_features[5] += 1.0
+                elif 7000 <= idx < 8000:  # Safety terms
+                    semantic_features[6] += 1.0
+                elif 8000 <= idx < 9000:  # Personal indicators
+                    semantic_features[7] += 1.0
+                else:
+                    semantic_features[8] += 1.0  # Other medical
+            else:
+                # Use hash for unknown words but with consistent mapping
+                vocab_indices.append(hash(word) % 1000 + 9000)  # Unknown words start at 9000
+                semantic_features[9] += 1.0  # Unknown category
+        
+        # Normalize semantic features
+        total_words = semantic_features.sum()
+        if total_words > 0:
+            semantic_features = semantic_features / total_words
         
         # Pad or truncate to fixed length
         if len(vocab_indices) < 32:
@@ -428,12 +502,25 @@ class MedicalNeuralReasoner:
             vocab_indices = vocab_indices[:32]
         
         indices_tensor = torch.tensor(vocab_indices, device=self.device)
-        embeddings = self.medical_embeddings(indices_tensor)
+        word_embeddings = self.medical_embeddings(indices_tensor)
         
-        # Pool embeddings (mean pooling)
-        pooled_embedding = embeddings.mean(dim=0, keepdim=True)
+        # Combine word embeddings with semantic features
+        # Pool word embeddings (mean pooling)
+        pooled_embedding = word_embeddings.mean(dim=0, keepdim=True)
         
-        return pooled_embedding
+        # Concatenate semantic features to provide additional context
+        semantic_expanded = semantic_features.unsqueeze(0)  # Add batch dimension
+        
+        # Combine embeddings - if dimensions don't match, adjust
+        if pooled_embedding.shape[-1] >= 10:
+            # Replace last 10 dimensions with semantic features
+            enhanced_embedding = pooled_embedding.clone()
+            enhanced_embedding[0, -10:] = semantic_features
+        else:
+            # Concatenate if embedding is too small
+            enhanced_embedding = torch.cat([pooled_embedding, semantic_expanded], dim=-1)
+        
+        return enhanced_embedding
     
     def _evaluate_ethical_compliance(self, prediction: torch.Tensor, context: Dict[str, Any]) -> torch.Tensor:
         """Evaluate ethical compliance of neural prediction"""

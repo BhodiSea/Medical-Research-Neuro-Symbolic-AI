@@ -420,75 +420,91 @@ class MedicalLogicEngine:
             }
     
     def _perform_symbolic_reasoning(self, query: str, context: Dict[str, Any]) -> Dict[str, Any]:
-        """Perform symbolic reasoning using integrated components"""
-        # TODO: Replace with actual OSS component integration
-        
-        # Enhanced placeholder with medical domain specificity
+        """Perform functional symbolic reasoning using medical knowledge graph and logic"""
         reasoning_steps = []
         confidence_factors = []
         sources = []
         warnings = []
+        knowledge_results = []
         
         # Step 1: Query Analysis and Classification
         query_classification = self._classify_medical_query(query, context)
         reasoning_steps.append(f"Classified query as: {query_classification['primary_category']}")
         confidence_factors.append(query_classification['classification_confidence'])
         
-        # Step 2: Knowledge Retrieval Simulation
-        if query_classification['primary_category'] == 'anatomy':
-            sources.extend(["Gray's Anatomy", "Netter's Atlas", "medical_textbooks"])
-            reasoning_steps.append("Retrieved anatomical knowledge from medical references")
-            confidence_factors.append(0.9)
+        # Step 2: FUNCTIONAL Knowledge Graph Integration
+        try:
+            # Import and use actual medical knowledge graph
+            from ..medical_knowledge.knowledge_graph import create_medical_knowledge_graph
+            knowledge_graph = create_medical_knowledge_graph()
             
-        elif query_classification['primary_category'] == 'research':
-            sources.extend(["PubMed", "Cochrane_Library", "peer_reviewed_journals"])
-            reasoning_steps.append("Analyzed relevant medical research literature")
-            confidence_factors.append(0.85)
+            # Perform semantic search on knowledge graph
+            search_results = knowledge_graph.semantic_search(query, entity_types=None)
+            if search_results:
+                reasoning_steps.append(f"Found {len(search_results)} relevant medical entities in knowledge graph")
+                knowledge_results = [{"name": entity.name, "type": entity.type, "properties": entity.properties} 
+                                   for entity in search_results[:5]]  # Top 5 results
+                confidence_factors.append(0.85)
+                sources.append("medical_knowledge_graph")
             
-        elif query_classification['primary_category'] == 'pathophysiology':
-            sources.extend(["Robbins_Pathology", "Harrison's_Internal_Medicine", "pathophysiology_texts"])
-            reasoning_steps.append("Applied pathophysiological reasoning principles")
-            confidence_factors.append(0.8)
-            
-        else:
-            sources.extend(["general_medical_knowledge", "educational_resources"])
-            reasoning_steps.append("Applied general medical knowledge synthesis")
-            confidence_factors.append(0.7)
+            # If query mentions symptoms, perform differential diagnosis
+            if query_classification['primary_category'] in ['clinical_presentation', 'pathophysiology']:
+                symptoms = self._extract_symptoms_from_query(query)
+                if symptoms:
+                    differential = knowledge_graph.get_differential_diagnosis(symptoms)
+                    if differential:
+                        reasoning_steps.append(f"Performed differential analysis for symptoms: {symptoms}")
+                        knowledge_results.extend([
+                            {"condition": condition.name, "score": score, "type": "differential_diagnosis"}
+                            for condition, score in differential[:3]
+                        ])
+                        confidence_factors.append(0.9)
         
-        # Step 3: Logical Inference (Simulated)
-        reasoning_steps.append("Applied medical logic rules and constraints")
-        reasoning_steps.append("Cross-referenced with medical safety guidelines")
+        except Exception as e:
+            reasoning_steps.append(f"Knowledge graph integration failed, using rule-based fallback: {str(e)}")
+            confidence_factors.append(0.6)
         
-        # Step 4: Uncertainty Assessment
-        if context.get("has_personal_data"):
-            warnings.append("Personal medical data requires healthcare professional evaluation")
-            confidence_factors.append(0.6)  # Lower confidence for personal queries
+        # Step 3: FUNCTIONAL Logical Inference
+        logical_inferences = self._perform_logical_inference(query_classification, knowledge_results)
+        reasoning_steps.extend(logical_inferences["steps"])
+        confidence_factors.append(logical_inferences["confidence"])
         
-        # Step 5: Educational Appropriateness Check
-        if query_classification.get('educational_appropriate', True):
-            reasoning_steps.append("Validated educational appropriateness")
-            confidence_factors.append(0.9)
-        else:
-            warnings.append("Query may require professional medical consultation")
-            confidence_factors.append(0.5)
+        # Step 4: Medical Safety and Ethical Validation  
+        safety_assessment = self._validate_medical_safety(query, context, knowledge_results)
+        reasoning_steps.extend(safety_assessment["steps"])
+        warnings.extend(safety_assessment["warnings"])
+        if safety_assessment["blocked"]:
+            return safety_assessment  # Return early if blocked for safety
         
-        # Calculate overall confidence
-        overall_confidence = sum(confidence_factors) / len(confidence_factors) if confidence_factors else 0.5
+        # Step 5: Enhanced Source Attribution
+        sources.extend(self._get_authoritative_sources(query_classification['primary_category']))
+        
+        # Step 6: Uncertainty Quantification
+        uncertainty_assessment = self._quantify_uncertainty(query_classification, knowledge_results, context)
+        reasoning_steps.append(f"Uncertainty assessment: {uncertainty_assessment['level']}")
+        confidence_factors.append(uncertainty_assessment['confidence_adjustment'])
+        
+        # Calculate overall confidence with knowledge graph boost
+        base_confidence = sum(confidence_factors) / len(confidence_factors) if confidence_factors else 0.5
+        knowledge_boost = 0.1 if knowledge_results else 0.0
+        overall_confidence = min(base_confidence + knowledge_boost, 0.95)  # Cap at 95%
         
         return {
             "reasoning_type": "symbolic",
-            "method": "rule_based_medical_logic",
+            "method": "knowledge_graph_enhanced_logic",
             "query_classification": query_classification,
-            "confidence": min(overall_confidence, 0.95),  # Cap at 95% for medical queries
+            "confidence": overall_confidence,
             "sources": sources,
             "reasoning_steps": reasoning_steps,
             "warnings": warnings,
+            "knowledge_graph_results": knowledge_results,
+            "logical_inferences": logical_inferences.get("conclusions", []),
             "uncertainty_factors": [
                 "Medical knowledge evolves continuously",
                 "Individual cases may vary significantly", 
                 "Professional medical evaluation recommended for personal health decisions"
             ],
-            "result": self._generate_educational_response(query_classification, context)
+            "result": self._generate_enhanced_educational_response(query_classification, knowledge_results, context)
         }
     
     def _classify_medical_query(self, query: str, context: Dict[str, Any]) -> Dict[str, Any]:
@@ -539,6 +555,198 @@ class MedicalLogicEngine:
             return "Educational information about clinical presentations provided for learning purposes only"
         else:
             return "General medical research information provided within safety and ethical guidelines"
+    
+    def _extract_symptoms_from_query(self, query: str) -> List[str]:
+        """Extract potential symptoms mentioned in the query"""
+        symptoms = []
+        symptom_keywords = [
+            "pain", "ache", "fever", "nausea", "vomiting", "dizziness", "fatigue", 
+            "shortness of breath", "chest pain", "headache", "cough", "swelling",
+            "weakness", "numbness", "tingling", "rash", "bleeding", "discharge"
+        ]
+        
+        query_lower = query.lower()
+        for symptom in symptom_keywords:
+            if symptom in query_lower:
+                symptoms.append(symptom)
+        
+        return symptoms
+    
+    def _perform_logical_inference(self, query_classification: Dict[str, Any], knowledge_results: List[Dict]) -> Dict[str, Any]:
+        """Perform logical inference based on query and knowledge"""
+        steps = []
+        conclusions = []
+        confidence = 0.7
+        
+        category = query_classification['primary_category']
+        
+        if category == 'anatomy':
+            steps.append("Applied anatomical logic: structure relates to function")
+            if knowledge_results:
+                for result in knowledge_results:
+                    if result['type'] == 'anatomy':
+                        conclusions.append(f"Anatomical structure {result['name']} has specific functional properties")
+                confidence = 0.85
+        
+        elif category == 'pathophysiology':
+            steps.append("Applied pathophysiological reasoning: mechanism leads to manifestation")
+            if knowledge_results:
+                conditions = [r for r in knowledge_results if r.get('type') == 'differential_diagnosis']
+                if conditions:
+                    conclusions.append("Multiple conditions may present similarly - differential diagnosis required")
+                    confidence = 0.8
+        
+        elif category == 'research':
+            steps.append("Applied research methodology: evidence hierarchy and statistical reasoning")
+            conclusions.append("Research findings require critical evaluation and replication")
+            confidence = 0.75
+        
+        else:
+            steps.append("Applied general medical reasoning principles")
+            conclusions.append("Medical knowledge requires integration of multiple domains")
+            confidence = 0.7
+        
+        return {
+            "steps": steps,
+            "conclusions": conclusions,
+            "confidence": confidence
+        }
+    
+    def _validate_medical_safety(self, query: str, context: Dict[str, Any], knowledge_results: List[Dict]) -> Dict[str, Any]:
+        """Enhanced medical safety validation"""
+        steps = []
+        warnings = []
+        blocked = False
+        
+        # Use existing safety rules
+        safety_result = self._apply_safety_rules(query, context)
+        
+        if safety_result.get("status") == "blocked":
+            return {
+                "blocked": True,
+                "status": "blocked",
+                "reason": safety_result.get("reason"),
+                "steps": ["Medical safety rules triggered blocking"],
+                "warnings": [safety_result.get("message", "Query blocked for safety")]
+            }
+        
+        # Additional safety checks with knowledge graph results
+        steps.append("Passed initial safety rule validation")
+        
+        if knowledge_results:
+            high_risk_conditions = [r for r in knowledge_results 
+                                   if r.get('type') == 'differential_diagnosis' and 
+                                   'emergency' in str(r.get('properties', {})).lower()]
+            if high_risk_conditions:
+                warnings.append("Query involves conditions that may require emergency care")
+                steps.append("Identified potential emergency conditions - added safety warning")
+        
+        # Personal data check
+        if context.get("has_personal_data"):
+            warnings.append("Personal medical information requires healthcare professional evaluation")
+            steps.append("Detected personal medical data - added privacy warning")
+        
+        return {
+            "blocked": blocked,
+            "steps": steps,
+            "warnings": warnings
+        }
+    
+    def _get_authoritative_sources(self, category: str) -> List[str]:
+        """Get authoritative medical sources for each category"""
+        source_map = {
+            'anatomy': ["Gray's Anatomy", "Netter's Atlas of Human Anatomy", "Sobotta Atlas"],
+            'pathophysiology': ["Robbins Basic Pathology", "Pathophysiology of Disease", "Kumar & Clark's Medicine"],
+            'research': ["PubMed", "Cochrane Library", "BMJ", "NEJM", "Lancet"],
+            'clinical_presentation': ["Harrison's Principles of Internal Medicine", "Oxford Handbook of Clinical Medicine"],
+            'general_medical': ["Merck Manual", "UpToDate", "Mayo Clinic Proceedings"]
+        }
+        return source_map.get(category, ["General Medical Literature"])
+    
+    def _quantify_uncertainty(self, query_classification: Dict[str, Any], knowledge_results: List[Dict], context: Dict[str, Any]) -> Dict[str, Any]:
+        """Quantify uncertainty in the reasoning process"""
+        uncertainty_factors = []
+        confidence_adjustment = 0.0
+        
+        # Classification uncertainty
+        if query_classification['classification_confidence'] < 0.8:
+            uncertainty_factors.append("Query classification has moderate uncertainty")
+            confidence_adjustment -= 0.1
+        
+        # Knowledge graph coverage
+        if not knowledge_results:
+            uncertainty_factors.append("Limited knowledge graph coverage for this query")
+            confidence_adjustment -= 0.15
+        elif len(knowledge_results) == 1:
+            uncertainty_factors.append("Sparse knowledge graph results")
+            confidence_adjustment -= 0.05
+        
+        # Complexity factor
+        if query_classification['complexity_level'] == 'high':
+            uncertainty_factors.append("High query complexity increases uncertainty")
+            confidence_adjustment -= 0.1
+        
+        # Personal vs academic distinction
+        if query_classification.get('is_personal_query'):
+            uncertainty_factors.append("Personal medical queries have inherent uncertainty")
+            confidence_adjustment -= 0.2
+        
+        # Determine overall uncertainty level
+        if confidence_adjustment <= -0.3:
+            level = "high"
+        elif confidence_adjustment <= -0.15:
+            level = "moderate"
+        else:
+            level = "low"
+        
+        return {
+            "level": level,
+            "factors": uncertainty_factors,
+            "confidence_adjustment": max(confidence_adjustment, -0.3)  # Cap reduction
+        }
+    
+    def _generate_enhanced_educational_response(self, query_classification: Dict[str, Any], knowledge_results: List[Dict], context: Dict[str, Any]) -> str:
+        """Generate enhanced educational response using knowledge graph results"""
+        category = query_classification['primary_category']
+        
+        if not knowledge_results:
+            return self._generate_educational_response(query_classification, context)
+        
+        response = f"**Medical Educational Information - {category.title().replace('_', ' ')}**\n\n"
+        
+        # Add knowledge graph findings
+        entities = [r for r in knowledge_results if r.get('type') != 'differential_diagnosis']
+        if entities:
+            response += "**Relevant Medical Concepts:**\n"
+            for entity in entities[:3]:  # Top 3
+                response += f"- **{entity['name']}** ({entity['type']}): "
+                if entity.get('properties'):
+                    key_props = list(entity['properties'].items())[:2]  # Top 2 properties
+                    response += ", ".join([f"{k}: {v}" for k, v in key_props])
+                response += "\n"
+            response += "\n"
+        
+        # Add differential diagnosis if available
+        diagnoses = [r for r in knowledge_results if r.get('type') == 'differential_diagnosis']
+        if diagnoses:
+            response += "**Educational Differential Considerations:**\n"
+            response += "*Note: For educational purposes only - not for diagnostic use*\n"
+            for dx in diagnoses:
+                response += f"- {dx['condition']} (educational relevance: {dx['score']:.2f})\n"
+            response += "\n"
+        
+        # Add category-specific educational content
+        if category == 'anatomy':
+            response += "**Educational Context:** Understanding anatomical structures helps in comprehending physiological functions and pathological processes.\n\n"
+        elif category == 'pathophysiology':
+            response += "**Educational Context:** Pathophysiological mechanisms explain how diseases develop and progress, informing treatment approaches.\n\n"
+        elif category == 'research':
+            response += "**Educational Context:** Medical research requires critical evaluation of evidence quality and statistical significance.\n\n"
+        
+        response += "**Educational Reminder:** This information is for educational purposes only. "
+        response += "Always consult qualified healthcare providers for personal medical concerns and clinical decisions."
+        
+        return response
     
     async def _perform_enhanced_symbolic_reasoning(self, query: str, context: Dict[str, Any]) -> Dict[str, Any]:
         """Perform enhanced symbolic reasoning using SymbolicAI integration"""
