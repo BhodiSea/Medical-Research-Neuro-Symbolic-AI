@@ -16,11 +16,77 @@ if str(torchlogic_path) not in sys.path:
 try:
     # Import TorchLogic components when available
     import torch
-    from torchlogic import LogicModule, WeightedLogic, LogicalNeuralNetwork
+    from torchlogic.nn import (LukasiewiczChannelAndBlock, LukasiewiczChannelOrBlock, 
+                              LukasiewiczChannelXOrBlock, VariationalLukasiewiczChannelAndBlock,
+                              VariationalLukasiewiczChannelOrBlock, VariationalLukasiewiczChannelXOrBlock,
+                              AttentionLukasiewiczChannelAndBlock, AttentionLukasiewiczChannelOrBlock,
+                              ConcatenateBlocksLogic)
+    from torchlogic.nn.predicates import Predicates
     TORCHLOGIC_AVAILABLE = True
 except ImportError as e:
     print(f"Warning: TorchLogic not available: {e}")
     TORCHLOGIC_AVAILABLE = False
+    # Create mock torch for type hints
+    class MockTorch:
+        class Tensor:
+            def __init__(self, *args, **kwargs):
+                pass
+            def detach(self):
+                return self
+            def numpy(self):
+                return [0.5] * 32
+            def shape(self):
+                return (1, 32)
+            def ndim(self):
+                return 2
+            def unsqueeze(self, dim):
+                return self
+            def repeat(self, *args):
+                return self
+            def gather(self, *args):
+                return self
+            def clone(self):
+                return self
+            def item(self):
+                return 0.5
+            def __len__(self):
+                return 32
+            def __getitem__(self, idx):
+                return 0.5
+            def __setitem__(self, idx, val):
+                pass
+            def __iter__(self):
+                return iter([0.5] * 32)
+            def __str__(self):
+                return "MockTensor"
+            def __repr__(self):
+                return "MockTensor"
+        
+        def randn(self, *args):
+            return self.Tensor()
+        
+        def tensor(self, data):
+            return self.Tensor()
+        
+        def cat(self, tensors, dim=-1):
+            return self.Tensor()
+        
+        def clamp(self, tensor, min_val=None, max_val=None):
+            return tensor
+        
+        def abs(self, tensor):
+            return tensor
+        
+        def sqrt(self, tensor):
+            return tensor
+        
+        def mean(self, tensor):
+            return 0.5
+        
+        def var(self, tensor):
+            return 0.1
+    
+    torch = MockTorch()
 
 
 class TorchLogicIntegration:
@@ -84,16 +150,94 @@ class TorchLogicIntegration:
             domains = ["neurology", "pharmacology", "biochemistry", "clinical_research"]
             
             for domain in domains:
-                network = LogicalNeuralNetwork(
-                    input_size=64,  # Configurable based on input features
-                    hidden_size=128,
-                    output_size=32,
-                    num_layers=3
-                )
+                # Create a concatenated logic network for each domain
+                network = self._create_domain_logic_network(domain)
                 self.weighted_logic_networks[domain] = network
                 
         except Exception as e:
             print(f"Error initializing weighted networks: {e}")
+    
+    def _create_domain_logic_network(self, domain: str) -> Any:
+        """Create a logic network for a specific medical domain"""
+        try:
+            # Create predicates for the domain
+            predicates = Predicates()
+            
+            # Create logic blocks based on domain
+            if domain == "neurology":
+                # AND logic for symptom combination
+                and_block = LukasiewiczChannelAndBlock(
+                    channels=4,
+                    in_features=64,
+                    out_features=32,
+                    n_selected_features=16,
+                    parent_weights_dimension='out_features',
+                    operands=predicates,
+                    outputs_key='neurology_and'
+                )
+                
+                # OR logic for alternative diagnoses
+                or_block = LukasiewiczChannelOrBlock(
+                    channels=4,
+                    in_features=32,
+                    out_features=16,
+                    n_selected_features=8,
+                    parent_weights_dimension='out_features',
+                    operands=and_block,
+                    outputs_key='neurology_or'
+                )
+                
+                return ConcatenateBlocksLogic([and_block, or_block])
+                
+            elif domain == "pharmacology":
+                # XOR logic for drug interactions
+                xor_block = LukasiewiczChannelXOrBlock(
+                    channels=4,
+                    in_features=64,
+                    out_features=32,
+                    n_selected_features=16,
+                    parent_weights_dimension='out_features',
+                    operands=predicates,
+                    outputs_key='pharmacology_xor'
+                )
+                
+                return xor_block
+                
+            elif domain == "biochemistry":
+                # Variational logic for biomarker analysis
+                var_and_block = VariationalLukasiewiczChannelAndBlock(
+                    channels=4,
+                    in_features=64,
+                    out_features=32,
+                    n_selected_features=16,
+                    parent_weights_dimension='out_features',
+                    operands=predicates,
+                    outputs_key='biochemistry_var_and',
+                    var_emb_dim=32,
+                    var_n_layers=2
+                )
+                
+                return var_and_block
+                
+            else:  # clinical_research
+                # Attention logic for clinical trial analysis
+                attn_and_block = AttentionLukasiewiczChannelAndBlock(
+                    channels=4,
+                    in_features=64,
+                    out_features=32,
+                    n_selected_features=16,
+                    parent_weights_dimension='out_features',
+                    operands=predicates,
+                    outputs_key='clinical_attn_and',
+                    attn_emb_dim=32,
+                    attn_n_layers=2
+                )
+                
+                return attn_and_block
+                
+        except Exception as e:
+            print(f"Error creating domain logic network for {domain}: {e}")
+            return None
     
     def create_logic_module(self, module_name: str, logic_config: Dict[str, Any]) -> Optional[Any]:
         """Create a TorchLogic module for medical reasoning"""
@@ -101,13 +245,58 @@ class TorchLogicIntegration:
             return self._mock_logic_module(module_name, logic_config)
         
         try:
-            # Create logic module with specified configuration
-            module = LogicModule(
-                input_size=logic_config.get("input_size", 64),
-                output_size=logic_config.get("output_size", 32),
-                logic_type=logic_config.get("logic_type", "weighted"),
-                activation=logic_config.get("activation", "sigmoid")
-            )
+            # Determine logic type from config
+            logic_type = logic_config.get("logic_type", "and")
+            channels = logic_config.get("channels", 4)
+            in_features = logic_config.get("input_size", 64)
+            out_features = logic_config.get("output_size", 32)
+            n_selected = logic_config.get("n_selected_features", 16)
+            
+            # Create predicates
+            predicates = Predicates()
+            
+            # Create appropriate logic block
+            if logic_type == "and":
+                module = LukasiewiczChannelAndBlock(
+                    channels=channels,
+                    in_features=in_features,
+                    out_features=out_features,
+                    n_selected_features=n_selected,
+                    parent_weights_dimension='out_features',
+                    operands=predicates,
+                    outputs_key=module_name
+                )
+            elif logic_type == "or":
+                module = LukasiewiczChannelOrBlock(
+                    channels=channels,
+                    in_features=in_features,
+                    out_features=out_features,
+                    n_selected_features=n_selected,
+                    parent_weights_dimension='out_features',
+                    operands=predicates,
+                    outputs_key=module_name
+                )
+            elif logic_type == "xor":
+                module = LukasiewiczChannelXOrBlock(
+                    channels=channels,
+                    in_features=in_features,
+                    out_features=out_features,
+                    n_selected_features=n_selected,
+                    parent_weights_dimension='out_features',
+                    operands=predicates,
+                    outputs_key=module_name
+                )
+            else:
+                # Default to AND
+                module = LukasiewiczChannelAndBlock(
+                    channels=channels,
+                    in_features=in_features,
+                    out_features=out_features,
+                    n_selected_features=n_selected,
+                    parent_weights_dimension='out_features',
+                    operands=predicates,
+                    outputs_key=module_name
+                )
             
             self.logic_modules[module_name] = module
             return module
@@ -128,21 +317,14 @@ class TorchLogicIntegration:
             if network is None:
                 network = list(self.weighted_logic_networks.values())[0]  # Use first available
             
-            # Apply logic rules
-            logic_outputs = []
-            for rule_name in logic_rules:
-                if rule_name in self.medical_logic_rules:
-                    rule = self.medical_logic_rules[rule_name]
-                    # Apply weighted logic rule
-                    rule_output = self._apply_logic_rule(input_data, rule)
-                    logic_outputs.append(rule_output)
+            # Ensure input tensor has correct shape
+            if input_data.ndim == 1:
+                input_data = input_data.unsqueeze(0)  # Add batch dimension
+            if input_data.ndim == 2:
+                input_data = input_data.unsqueeze(1)  # Add channel dimension
             
-            # Process through neural network
-            if logic_outputs:
-                combined_input = torch.cat(logic_outputs, dim=-1)
-                network_output = network(combined_input)
-            else:
-                network_output = network(input_data)
+            # Process through logic network
+            network_output = network(input_data)
             
             # Calculate confidence and reasoning
             confidence = self._calculate_logic_confidence(network_output)
@@ -167,14 +349,70 @@ class TorchLogicIntegration:
             return self._mock_weighted_network(network_config)
         
         try:
-            # Create weighted logic network
-            network = WeightedLogic(
-                input_dim=network_config.get("input_dim", 64),
-                hidden_dims=network_config.get("hidden_dims", [128, 64]),
-                output_dim=network_config.get("output_dim", 32),
-                logic_layers=network_config.get("logic_layers", 2),
-                dropout=network_config.get("dropout", 0.1)
-            )
+            # Extract configuration
+            input_dim = network_config.get("input_dim", 64)
+            hidden_dims = network_config.get("hidden_dims", [128, 64])
+            output_dim = network_config.get("output_dim", 32)
+            logic_layers = network_config.get("logic_layers", 2)
+            
+            # Create predicates
+            predicates = Predicates()
+            
+            # Create logic blocks
+            logic_blocks = []
+            current_dim = input_dim
+            
+            for i, hidden_dim in enumerate(hidden_dims):
+                if i % 2 == 0:  # Even layers use AND
+                    block = LukasiewiczChannelAndBlock(
+                        channels=4,
+                        in_features=current_dim,
+                        out_features=hidden_dim,
+                        n_selected_features=min(current_dim // 2, 16),
+                        parent_weights_dimension='out_features',
+                        operands=predicates if i == 0 else logic_blocks[-1],
+                        outputs_key=f'layer_{i}_and'
+                    )
+                else:  # Odd layers use OR
+                    block = LukasiewiczChannelOrBlock(
+                        channels=4,
+                        in_features=current_dim,
+                        out_features=hidden_dim,
+                        n_selected_features=min(current_dim // 2, 16),
+                        parent_weights_dimension='out_features',
+                        operands=logic_blocks[-1],
+                        outputs_key=f'layer_{i}_or'
+                    )
+                
+                logic_blocks.append(block)
+                current_dim = hidden_dim
+            
+            # Final output layer
+            if logic_layers % 2 == 0:  # Even number of layers, use AND for output
+                final_block = LukasiewiczChannelAndBlock(
+                    channels=4,
+                    in_features=current_dim,
+                    out_features=output_dim,
+                    n_selected_features=min(current_dim // 2, 16),
+                    parent_weights_dimension='out_features',
+                    operands=logic_blocks[-1],
+                    outputs_key='output_and'
+                )
+            else:  # Odd number of layers, use OR for output
+                final_block = LukasiewiczChannelOrBlock(
+                    channels=4,
+                    in_features=current_dim,
+                    out_features=output_dim,
+                    n_selected_features=min(current_dim // 2, 16),
+                    parent_weights_dimension='out_features',
+                    operands=logic_blocks[-1],
+                    outputs_key='output_or'
+                )
+            
+            logic_blocks.append(final_block)
+            
+            # Concatenate all blocks
+            network = ConcatenateBlocksLogic(logic_blocks)
             
             return network
             
@@ -201,6 +439,17 @@ class TorchLogicIntegration:
                 
                 for inputs, targets in training_data:
                     optimizer.zero_grad()
+                    
+                    # Ensure correct tensor shapes
+                    if inputs.ndim == 1:
+                        inputs = inputs.unsqueeze(0)
+                    if inputs.ndim == 2:
+                        inputs = inputs.unsqueeze(1)
+                    
+                    if targets.ndim == 1:
+                        targets = targets.unsqueeze(0)
+                    if targets.ndim == 2:
+                        targets = targets.unsqueeze(1)
                     
                     # Forward pass
                     outputs = network(inputs)
@@ -258,26 +507,6 @@ class TorchLogicIntegration:
         except Exception as e:
             print(f"Error applying medical constraints: {e}")
             return logic_output
-    
-    def _apply_logic_rule(self, input_data: torch.Tensor, rule: Dict[str, Any]) -> torch.Tensor:
-        """Apply a specific logic rule to input data"""
-        try:
-            # Extract rule components
-            premises = rule.get("premises", [])
-            weight = rule.get("weight", 1.0)
-            
-            # Apply weighted logic (simplified implementation)
-            if len(premises) > 0:
-                # For now, apply simple weighted combination
-                # In a real implementation, this would use proper logical operations
-                weighted_output = input_data * weight
-                return weighted_output
-            else:
-                return input_data
-                
-        except Exception as e:
-            print(f"Error applying logic rule: {e}")
-            return input_data
     
     def _calculate_logic_confidence(self, output: torch.Tensor) -> float:
         """Calculate confidence score for logic network output"""

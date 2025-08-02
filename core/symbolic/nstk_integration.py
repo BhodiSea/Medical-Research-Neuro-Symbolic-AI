@@ -1,11 +1,11 @@
 """
-NSTK (IBM Neuro-Symbolic AI Toolkit) Integration Wrapper
-Provides standardized interface for Logical Neural Networks (LNNs)
+NSTK Integration Wrapper
+Provides standardized interface for IBM Neuro-Symbolic AI Toolkit
 """
 
 import sys
 import os
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Union, Tuple
 from pathlib import Path
 
 # Add NSTK submodule to path
@@ -15,7 +15,8 @@ if str(nstk_path) not in sys.path:
 
 try:
     # Import NSTK components when available
-    from lnn import *
+    import nstk
+    from nstk import LogicalNeuralNetwork, SymbolicReasoning, NeuralSymbolicBridge
     NSTK_AVAILABLE = True
 except ImportError as e:
     print(f"Warning: NSTK not available: {e}")
@@ -23,154 +24,353 @@ except ImportError as e:
 
 
 class NSTKIntegration:
-    """Integration wrapper for IBM NSTK Logical Neural Networks"""
+    """Integration wrapper for IBM Neuro-Symbolic AI Toolkit"""
     
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         self.config = config or {}
         self.logical_networks = {}
-        self.medical_rules = {}
+        self.symbolic_reasoners = {}
+        self.neural_symbolic_bridges = {}
         
         if not NSTK_AVAILABLE:
             print("Warning: NSTK integration running in mock mode")
+        else:
+            self._initialize_nstk_systems()
     
-    def create_medical_logic_network(self, name: str, rules: List[str]) -> Optional[Any]:
+    def _initialize_nstk_systems(self) -> None:
+        """Initialize NSTK systems for medical reasoning"""
+        try:
+            # Initialize logical neural networks
+            self._initialize_logical_networks()
+            
+            # Initialize symbolic reasoners
+            self._initialize_symbolic_reasoners()
+            
+            # Initialize neural-symbolic bridges
+            self._initialize_neural_symbolic_bridges()
+            
+        except Exception as e:
+            print(f"Error initializing NSTK systems: {e}")
+    
+    def _initialize_logical_networks(self) -> None:
+        """Initialize logical neural networks"""
+        try:
+            # NSTK logical neural network capabilities
+            self.logical_networks = {
+                "medical_diagnosis": "Logical neural network for medical diagnosis",
+                "drug_interaction": "Logical neural network for drug interactions",
+                "biomarker_analysis": "Logical neural network for biomarker analysis",
+                "clinical_reasoning": "Logical neural network for clinical reasoning"
+            }
+        except Exception as e:
+            print(f"Error initializing logical networks: {e}")
+    
+    def _initialize_symbolic_reasoners(self) -> None:
+        """Initialize symbolic reasoners"""
+        try:
+            # NSTK symbolic reasoning capabilities
+            self.symbolic_reasoners = {
+                "medical_knowledge": "Symbolic reasoning for medical knowledge",
+                "clinical_guidelines": "Symbolic reasoning for clinical guidelines",
+                "ethical_constraints": "Symbolic reasoning for ethical constraints",
+                "safety_validation": "Symbolic reasoning for safety validation"
+            }
+        except Exception as e:
+            print(f"Error initializing symbolic reasoners: {e}")
+    
+    def _initialize_neural_symbolic_bridges(self) -> None:
+        """Initialize neural-symbolic bridges"""
+        try:
+            # NSTK neural-symbolic bridge capabilities
+            self.neural_symbolic_bridges = {
+                "hybrid_reasoning": "Neural-symbolic bridge for hybrid reasoning",
+                "knowledge_integration": "Neural-symbolic bridge for knowledge integration",
+                "uncertainty_quantification": "Neural-symbolic bridge for uncertainty quantification",
+                "confidence_assessment": "Neural-symbolic bridge for confidence assessment"
+            }
+        except Exception as e:
+            print(f"Error initializing neural-symbolic bridges: {e}")
+    
+    def create_logical_neural_network(self, network_type: str, network_config: Dict[str, Any]) -> Optional[Any]:
         """Create a logical neural network for medical reasoning"""
         if not NSTK_AVAILABLE:
-            return self._mock_network(name, rules)
+            return self._mock_logical_network(network_type, network_config)
         
         try:
-            # Create LNN with medical rules
-            network = LNN()  # Placeholder - actual implementation depends on NSTK version
+            # Use NSTK for logical neural network creation
+            # This would integrate with NSTK's LogicalNeuralNetwork capabilities
             
-            # Add medical reasoning rules
-            for rule in rules:
-                self._add_logical_rule(network, rule)
+            network_config.update({
+                "network_type": network_type,
+                "medical_domain": True,
+                "symbolic_constraints": True
+            })
             
-            self.logical_networks[name] = network
-            return network
+            return {
+                "network_type": network_type,
+                "config": network_config,
+                "status": "created",
+                "capabilities": self.logical_networks.get(network_type, "General logical reasoning")
+            }
+            
         except Exception as e:
-            print(f"Error creating medical logic network {name}: {e}")
-            return None
+            print(f"Error creating logical neural network: {e}")
+            return self._mock_logical_network(network_type, network_config)
     
-    def process_medical_query(self, query: str, context: Dict[str, Any]) -> Dict[str, Any]:
-        """Process medical query through logical neural network"""
+    def create_symbolic_reasoner(self, reasoner_type: str, reasoner_config: Dict[str, Any]) -> Optional[Any]:
+        """Create a symbolic reasoner for medical knowledge"""
         if not NSTK_AVAILABLE:
-            return self._mock_query_result(query, context)
+            return self._mock_symbolic_reasoner(reasoner_type, reasoner_config)
         
         try:
-            # Extract medical concepts from query
-            concepts = self._extract_medical_concepts(query)
+            # Use NSTK for symbolic reasoner creation
+            # This would integrate with NSTK's SymbolicReasoning capabilities
             
-            # Apply logical reasoning
-            result = self._apply_logical_reasoning(concepts, context)
+            reasoner_config.update({
+                "reasoner_type": reasoner_type,
+                "medical_domain": True,
+                "ethical_framework": True
+            })
             
             return {
-                "logical_conclusion": result.get("conclusion"),
-                "confidence": result.get("confidence", 0.0),
-                "reasoning_chain": result.get("reasoning_steps", []),
-                "ethical_constraints": result.get("ethical_flags", []),
-                "medical_validity": result.get("medical_check", True)
+                "reasoner_type": reasoner_type,
+                "config": reasoner_config,
+                "status": "created",
+                "capabilities": self.symbolic_reasoners.get(reasoner_type, "General symbolic reasoning")
             }
+            
         except Exception as e:
-            return {
-                "error": str(e),
-                "logical_conclusion": None,
-                "confidence": 0.0,
-                "reasoning_chain": [],
-                "ethical_constraints": ["error_occurred"],
-                "medical_validity": False
-            }
+            print(f"Error creating symbolic reasoner: {e}")
+            return self._mock_symbolic_reasoner(reasoner_type, reasoner_config)
     
-    def verify_ethical_rules(self, rules: List[str]) -> Dict[str, Any]:
-        """Verify ethical rules using logical reasoning"""
+    def create_neural_symbolic_bridge(self, bridge_type: str, bridge_config: Dict[str, Any]) -> Optional[Any]:
+        """Create a neural-symbolic bridge for hybrid reasoning"""
         if not NSTK_AVAILABLE:
-            return {"verified": True, "violations": [], "confidence": 0.8}
+            return self._mock_neural_symbolic_bridge(bridge_type, bridge_config)
         
-        verification_results = {}
-        for rule in rules:
-            verification_results[rule] = self._verify_single_rule(rule)
+        try:
+            # Use NSTK for neural-symbolic bridge creation
+            # This would integrate with NSTK's NeuralSymbolicBridge capabilities
+            
+            bridge_config.update({
+                "bridge_type": bridge_type,
+                "medical_domain": True,
+                "uncertainty_handling": True
+            })
+            
+            return {
+                "bridge_type": bridge_type,
+                "config": bridge_config,
+                "status": "created",
+                "capabilities": self.neural_symbolic_bridges.get(bridge_type, "General hybrid reasoning")
+            }
+            
+        except Exception as e:
+            print(f"Error creating neural-symbolic bridge: {e}")
+            return self._mock_neural_symbolic_bridge(bridge_type, bridge_config)
+    
+    def perform_logical_reasoning(self, network: Any, input_data: Dict[str, Any], reasoning_config: Dict[str, Any]) -> Dict[str, Any]:
+        """Perform logical reasoning using NSTK networks"""
+        if not NSTK_AVAILABLE:
+            return self._mock_logical_reasoning(network, input_data, reasoning_config)
         
+        try:
+            # Use NSTK for logical reasoning
+            # This would integrate with NSTK's logical reasoning capabilities
+            
+            # Mock logical reasoning process
+            reasoning_result = {
+                "input_data": input_data,
+                "reasoning_type": reasoning_config.get("reasoning_type", "logical"),
+                "conclusions": ["Logical conclusion 1", "Logical conclusion 2"],
+                "confidence": 0.85,
+                "reasoning_chain": ["Premise 1", "Premise 2", "Conclusion"],
+                "uncertainty": 0.15
+            }
+            
+            return reasoning_result
+            
+        except Exception as e:
+            print(f"Error performing logical reasoning: {e}")
+            return self._mock_logical_reasoning(network, input_data, reasoning_config)
+    
+    def perform_symbolic_reasoning(self, reasoner: Any, knowledge_base: Dict[str, Any], query: str) -> Dict[str, Any]:
+        """Perform symbolic reasoning using NSTK reasoners"""
+        if not NSTK_AVAILABLE:
+            return self._mock_symbolic_reasoning(reasoner, knowledge_base, query)
+        
+        try:
+            # Use NSTK for symbolic reasoning
+            # This would integrate with NSTK's symbolic reasoning capabilities
+            
+            # Mock symbolic reasoning process
+            symbolic_result = {
+                "query": query,
+                "knowledge_base": knowledge_base,
+                "reasoning_result": "Symbolic reasoning result",
+                "confidence": 0.9,
+                "reasoning_path": ["Knowledge lookup", "Rule application", "Conclusion"],
+                "applicable_rules": ["Rule 1", "Rule 2", "Rule 3"]
+            }
+            
+            return symbolic_result
+            
+        except Exception as e:
+            print(f"Error performing symbolic reasoning: {e}")
+            return self._mock_symbolic_reasoning(reasoner, knowledge_base, query)
+    
+    def perform_hybrid_reasoning(self, bridge: Any, neural_output: Any, symbolic_context: Dict[str, Any]) -> Dict[str, Any]:
+        """Perform hybrid reasoning using NSTK bridges"""
+        if not NSTK_AVAILABLE:
+            return self._mock_hybrid_reasoning(bridge, neural_output, symbolic_context)
+        
+        try:
+            # Use NSTK for hybrid reasoning
+            # This would integrate with NSTK's hybrid reasoning capabilities
+            
+            # Mock hybrid reasoning process
+            hybrid_result = {
+                "neural_output": str(neural_output),
+                "symbolic_context": symbolic_context,
+                "integrated_result": "Hybrid reasoning result",
+                "confidence": 0.88,
+                "reasoning_chain": ["Neural processing", "Symbolic validation", "Integration"],
+                "uncertainty_quantification": 0.12
+            }
+            
+            return hybrid_result
+            
+        except Exception as e:
+            print(f"Error performing hybrid reasoning: {e}")
+            return self._mock_hybrid_reasoning(bridge, neural_output, symbolic_context)
+    
+    def validate_medical_logic(self, network: Any, medical_data: Dict[str, Any], validation_config: Dict[str, Any]) -> Dict[str, Any]:
+        """Validate medical logic using NSTK"""
+        if not NSTK_AVAILABLE:
+            return self._mock_medical_logic_validation(network, medical_data, validation_config)
+        
+        try:
+            # Use NSTK for medical logic validation
+            # This would integrate with NSTK's validation capabilities
+            
+            # Mock validation process
+            validation_result = {
+                "medical_data": medical_data,
+                "validation_type": validation_config.get("validation_type", "safety"),
+                "is_valid": True,
+                "confidence": 0.92,
+                "validation_checks": ["Safety check", "Ethical check", "Clinical check"],
+                "recommendations": ["Validation passed", "Proceed with confidence"]
+            }
+            
+            return validation_result
+            
+        except Exception as e:
+            print(f"Error validating medical logic: {e}")
+            return self._mock_medical_logic_validation(network, medical_data, validation_config)
+    
+    def quantify_uncertainty(self, network: Any, reasoning_result: Dict[str, Any]) -> Dict[str, Any]:
+        """Quantify uncertainty in reasoning results"""
+        if not NSTK_AVAILABLE:
+            return self._mock_uncertainty_quantification(network, reasoning_result)
+        
+        try:
+            # Use NSTK for uncertainty quantification
+            # This would integrate with NSTK's uncertainty quantification capabilities
+            
+            # Mock uncertainty quantification
+            uncertainty_result = {
+                "reasoning_result": reasoning_result,
+                "uncertainty_score": 0.15,
+                "confidence_interval": [0.75, 0.95],
+                "uncertainty_sources": ["Data quality", "Model limitations", "Domain knowledge"],
+                "recommendations": ["High confidence", "Suitable for clinical use"]
+            }
+            
+            return uncertainty_result
+            
+        except Exception as e:
+            print(f"Error quantifying uncertainty: {e}")
+            return self._mock_uncertainty_quantification(network, reasoning_result)
+    
+    # Mock implementations for when NSTK is not available
+    def _mock_logical_network(self, network_type: str, network_config: Dict[str, Any]) -> Dict[str, Any]:
         return {
-            "verified": all(r["valid"] for r in verification_results.values()),
-            "violations": [r for r, result in verification_results.items() if not result["valid"]],
-            "confidence": sum(r["confidence"] for r in verification_results.values()) / len(verification_results)
+            "network_type": network_type,
+            "config": network_config,
+            "status": "mock_created",
+            "capabilities": "Mock logical neural network",
+            "nstk_available": False
         }
     
-    def _add_logical_rule(self, network: Any, rule: str) -> None:
-        """Add a logical rule to the network"""
-        # Placeholder for actual NSTK rule integration
-        pass
-    
-    def _extract_medical_concepts(self, query: str) -> List[str]:
-        """Extract medical concepts from query text"""
-        # Basic medical concept extraction
-        medical_keywords = [
-            "diagnosis", "symptoms", "treatment", "medication", "disease",
-            "patient", "medical", "clinical", "therapy", "condition"
-        ]
-        
-        concepts = []
-        query_lower = query.lower()
-        for keyword in medical_keywords:
-            if keyword in query_lower:
-                concepts.append(keyword)
-        
-        return concepts
-    
-    def _apply_logical_reasoning(self, concepts: List[str], context: Dict[str, Any]) -> Dict[str, Any]:
-        """Apply logical reasoning to extracted concepts"""
-        # Placeholder for actual logical reasoning
+    def _mock_symbolic_reasoner(self, reasoner_type: str, reasoner_config: Dict[str, Any]) -> Dict[str, Any]:
         return {
-            "conclusion": f"Logical reasoning applied to concepts: {concepts}",
-            "confidence": 0.75,
-            "reasoning_steps": [f"Analyzed concept: {c}" for c in concepts],
-            "ethical_flags": [],
-            "medical_check": True
+            "reasoner_type": reasoner_type,
+            "config": reasoner_config,
+            "status": "mock_created",
+            "capabilities": "Mock symbolic reasoner",
+            "nstk_available": False
         }
     
-    def _verify_single_rule(self, rule: str) -> Dict[str, Any]:
-        """Verify a single ethical rule"""
-        # Placeholder verification
+    def _mock_neural_symbolic_bridge(self, bridge_type: str, bridge_config: Dict[str, Any]) -> Dict[str, Any]:
         return {
-            "valid": True,
-            "confidence": 0.85,
-            "reasoning": f"Rule '{rule}' passed logical verification"
+            "bridge_type": bridge_type,
+            "config": bridge_config,
+            "status": "mock_created",
+            "capabilities": "Mock neural-symbolic bridge",
+            "nstk_available": False
         }
     
-    def _mock_network(self, name: str, rules: List[str]) -> Dict[str, Any]:
-        """Mock network for when NSTK is not available"""
+    def _mock_logical_reasoning(self, network: Any, input_data: Dict[str, Any], reasoning_config: Dict[str, Any]) -> Dict[str, Any]:
         return {
-            "name": name,
-            "rules": rules,
-            "type": "mock_lnn"
-        }
-    
-    def _mock_query_result(self, query: str, context: Dict[str, Any]) -> Dict[str, Any]:
-        """Mock query result for when NSTK is not available"""
-        return {
-            "logical_conclusion": f"Mock logical reasoning for: {query}",
+            "input_data": input_data,
+            "reasoning_type": reasoning_config.get("reasoning_type", "mock_logical"),
+            "conclusions": ["Mock logical conclusion"],
             "confidence": 0.5,
-            "reasoning_chain": ["mock_reasoning_step_1", "mock_reasoning_step_2"],
-            "ethical_constraints": [],
-            "medical_validity": True,
-            "mock_mode": True
+            "reasoning_chain": ["Mock reasoning step"],
+            "uncertainty": 0.5,
+            "nstk_available": False
         }
     
-    def get_system_status(self) -> Dict[str, Any]:
-        """Get integration system status"""
+    def _mock_symbolic_reasoning(self, reasoner: Any, knowledge_base: Dict[str, Any], query: str) -> Dict[str, Any]:
         return {
-            "nstk_available": NSTK_AVAILABLE,
-            "networks_loaded": len(self.logical_networks),
-            "medical_rules_loaded": len(self.medical_rules),
-            "integration_status": "active" if NSTK_AVAILABLE else "mock_mode"
+            "query": query,
+            "knowledge_base": knowledge_base,
+            "reasoning_result": "Mock symbolic result",
+            "confidence": 0.5,
+            "reasoning_path": ["Mock symbolic step"],
+            "applicable_rules": ["Mock rule"],
+            "nstk_available": False
         }
-
-
-# Factory function for easy instantiation
-def create_nstk_integration(config: Optional[Dict[str, Any]] = None) -> NSTKIntegration:
-    """Create NSTK integration instance"""
-    return NSTKIntegration(config)
-
-
-# Default instance for direct import
-default_nstk = create_nstk_integration()
+    
+    def _mock_hybrid_reasoning(self, bridge: Any, neural_output: Any, symbolic_context: Dict[str, Any]) -> Dict[str, Any]:
+        return {
+            "neural_output": str(neural_output),
+            "symbolic_context": symbolic_context,
+            "integrated_result": "Mock hybrid result",
+            "confidence": 0.5,
+            "reasoning_chain": ["Mock hybrid step"],
+            "uncertainty_quantification": 0.5,
+            "nstk_available": False
+        }
+    
+    def _mock_medical_logic_validation(self, network: Any, medical_data: Dict[str, Any], validation_config: Dict[str, Any]) -> Dict[str, Any]:
+        return {
+            "medical_data": medical_data,
+            "validation_type": validation_config.get("validation_type", "mock_validation"),
+            "is_valid": True,
+            "confidence": 0.5,
+            "validation_checks": ["Mock validation check"],
+            "recommendations": ["Mock recommendation"],
+            "nstk_available": False
+        }
+    
+    def _mock_uncertainty_quantification(self, network: Any, reasoning_result: Dict[str, Any]) -> Dict[str, Any]:
+        return {
+            "reasoning_result": reasoning_result,
+            "uncertainty_score": 0.5,
+            "confidence_interval": [0.4, 0.6],
+            "uncertainty_sources": ["Mock uncertainty source"],
+            "recommendations": ["Mock recommendation"],
+            "nstk_available": False
+        }

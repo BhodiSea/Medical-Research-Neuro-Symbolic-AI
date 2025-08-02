@@ -15,7 +15,7 @@ if str(symbolicai_path) not in sys.path:
 
 try:
     # Import SymbolicAI components when available
-    from symai import Symbol, Expression, NeuralEngine
+    from symai import Symbol, Expression, core
     SYMBOLICAI_AVAILABLE = True
 except ImportError as e:
     print(f"Warning: SymbolicAI not available: {e}")
@@ -39,9 +39,6 @@ class SymbolicAIIntegration:
     def _initialize_symbolic_engine(self) -> None:
         """Initialize the symbolic reasoning engine"""
         try:
-            # Initialize neural engine for LLM integration
-            self.neural_engine = NeuralEngine()
-            
             # Create medical domain symbols
             self._create_medical_symbols()
             
@@ -99,11 +96,8 @@ class SymbolicAIIntegration:
                 if domain in self.medical_symbols:
                     query_symbol.add_context(self.medical_symbols[domain])
             
-            # Process through neural engine for LLM integration
-            if self.neural_engine:
-                result = self.neural_engine.process(query_symbol)
-            else:
-                result = query_symbol.evaluate()
+            # Process through SymbolicAI core engine
+            result = query_symbol.forward()
             
             return {
                 "query": query,
@@ -133,7 +127,7 @@ class SymbolicAIIntegration:
                 # Add relationships
                 if "relationships" in item:
                     for rel in item["relationships"]:
-                        symbol.add_relationship(rel["type"], rel["target"])
+                        symbol.add_context(rel["type"], rel["target"])
                 
                 knowledge_symbols.append(symbol)
             
@@ -155,10 +149,10 @@ class SymbolicAIIntegration:
             # Apply symbolic reasoning rules
             for rule, context in symbolic_context.items():
                 if rule in self.medical_symbols:
-                    neural_symbol.apply_rule(self.medical_symbols[rule], context)
+                    neural_symbol.add_context(self.medical_symbols[rule])
             
             # Evaluate integrated result
-            integrated_result = neural_symbol.evaluate()
+            integrated_result = neural_symbol.forward()
             
             return {
                 "neural_output": str(neural_output),
@@ -171,6 +165,48 @@ class SymbolicAIIntegration:
             print(f"Error in neural-symbolic integration: {e}")
             return self._mock_neural_integration(neural_output, symbolic_context)
     
+    def create_medical_prompt(self, prompt_template: str, medical_data: Dict[str, Any]) -> Optional[Any]:
+        """Create a medical prompt using SymbolicAI prompt system"""
+        if not SYMBOLICAI_AVAILABLE:
+            return self._mock_prompt(prompt_template, medical_data)
+        
+        try:
+            # Create prompt using SymbolicAI's prompt system
+            prompt = Expression.prompt(prompt_template)
+            
+            # Add medical context to prompt
+            for key, value in medical_data.items():
+                prompt.add_context(key, value)
+            
+            return prompt
+            
+        except Exception as e:
+            print(f"Error creating medical prompt: {e}")
+            return None
+    
+    def execute_medical_command(self, command: str, medical_context: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute medical commands using SymbolicAI command system"""
+        if not SYMBOLICAI_AVAILABLE:
+            return self._mock_command_execution(command, medical_context)
+        
+        try:
+            # Create command using SymbolicAI's command system
+            cmd = Expression.command(engines=['all'])
+            
+            # Execute command with medical context
+            result = cmd(medical_context)
+            
+            return {
+                "command": command,
+                "result": str(result),
+                "confidence": self._calculate_confidence(result),
+                "execution_path": self._extract_execution_path(result)
+            }
+            
+        except Exception as e:
+            print(f"Error executing medical command: {e}")
+            return self._mock_command_execution(command, medical_context)
+    
     def _calculate_confidence(self, result: Any) -> float:
         """Calculate confidence score for symbolic reasoning result"""
         try:
@@ -179,6 +215,13 @@ class SymbolicAIIntegration:
                 return float(result.confidence)
             elif hasattr(result, 'score'):
                 return float(result.score)
+            elif hasattr(result, 'value'):
+                # Use value magnitude as confidence indicator
+                value = result.value
+                if isinstance(value, (int, float)):
+                    return min(1.0, abs(value) / 10.0)
+                else:
+                    return 0.7  # Default confidence for non-numeric results
             else:
                 # Default confidence based on result complexity
                 return min(0.8, 0.3 + len(str(result)) * 0.01)
@@ -192,6 +235,11 @@ class SymbolicAIIntegration:
                 return result.reasoning_path
             elif hasattr(result, 'steps'):
                 return result.steps
+            elif hasattr(result, 'metadata'):
+                # Extract from metadata if available
+                metadata = result.metadata
+                if hasattr(metadata, 'reasoning'):
+                    return [metadata.reasoning]
             else:
                 return [str(result)]
         except:
@@ -202,10 +250,25 @@ class SymbolicAIIntegration:
         try:
             if hasattr(result, 'chain'):
                 return result.chain
+            elif hasattr(result, 'nodes'):
+                # Extract from symbolic graph nodes
+                return [f"Node: {node}" for node in result.nodes]
             else:
                 return [str(result)]
         except:
             return ["Integration completed"]
+    
+    def _extract_execution_path(self, result: Any) -> List[str]:
+        """Extract execution path from command result"""
+        try:
+            if hasattr(result, 'execution_path'):
+                return result.execution_path
+            elif hasattr(result, 'steps'):
+                return result.steps
+            else:
+                return ["Command executed successfully"]
+        except:
+            return ["Command execution completed"]
     
     # Mock implementations for when SymbolicAI is not available
     def _mock_expression(self, expression: str, context: Dict[str, Any]) -> Dict[str, Any]:
@@ -239,5 +302,22 @@ class SymbolicAIIntegration:
             "symbolic_integration": "Mock neural-symbolic integration",
             "confidence": 0.5,
             "reasoning_chain": ["Mock integration reasoning"],
+            "status": "symbolicai_not_available"
+        }
+    
+    def _mock_prompt(self, prompt_template: str, medical_data: Dict[str, Any]) -> Dict[str, Any]:
+        return {
+            "prompt_template": prompt_template,
+            "medical_data": medical_data,
+            "type": "mock_medical_prompt",
+            "status": "symbolicai_not_available"
+        }
+    
+    def _mock_command_execution(self, command: str, medical_context: Dict[str, Any]) -> Dict[str, Any]:
+        return {
+            "command": command,
+            "result": f"Mock execution of: {command}",
+            "confidence": 0.5,
+            "execution_path": ["Mock command execution"],
             "status": "symbolicai_not_available"
         }

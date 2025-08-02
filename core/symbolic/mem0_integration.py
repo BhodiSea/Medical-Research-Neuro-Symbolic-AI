@@ -206,7 +206,7 @@ class Mem0Integration:
             }
     
     def store_agent_experience(self, agent_id: str, experience: Dict[str, Any]) -> Dict[str, Any]:
-        """Store agent's experience for learning and memory"""
+        """Store agent experience for ethical learning"""
         if not MEM0_AVAILABLE:
             return self._mock_memory_storage(experience, "agent")
         
@@ -215,16 +215,16 @@ class Mem0Integration:
             if not memory:
                 return {"error": "Agent memory system not initialized"}
             
-            # Format agent experience for storage
+            # Format experience for storage
             memory_content = {
                 "type": "agent_experience",
                 "agent_id": agent_id,
-                "experience": experience.get("description", ""),
-                "action_taken": experience.get("action", ""),
-                "outcome": experience.get("outcome", ""),
-                "reasoning": experience.get("reasoning", ""),
-                "success": experience.get("success", False),
-                "learning_points": experience.get("learning_points", []),
+                "experience_type": experience.get("type", "general"),
+                "content": experience.get("description", ""),
+                "ethical_implications": experience.get("ethical_implications", []),
+                "learning_outcomes": experience.get("learning_outcomes", []),
+                "confidence_change": experience.get("confidence_change", 0.0),
+                "moral_weight": experience.get("moral_weight", 0.0),
                 "timestamp": self._get_timestamp()
             }
             
@@ -238,7 +238,7 @@ class Mem0Integration:
                 "stored": True,
                 "memory_id": result.get("memory_id"),
                 "agent_id": agent_id,
-                "experience_type": "agent",
+                "experience_type": experience.get("type", "general"),
                 "storage_timestamp": self._get_timestamp()
             }
             
@@ -247,6 +247,127 @@ class Mem0Integration:
                 "stored": False,
                 "error": str(e),
                 "agent_id": agent_id
+            }
+    
+    def create_medical_memory(self, memory_id: str, content: str, memory_type: str) -> Dict[str, Any]:
+        """Create a medical memory entry"""
+        if not MEM0_AVAILABLE:
+            return self._mock_memory_storage({"content": content, "type": memory_type}, "medical")
+        
+        try:
+            memory = self.memory_instances.get("ethical")
+            if not memory:
+                return {"error": "Memory system not initialized"}
+            
+            # Format medical memory for storage
+            memory_content = {
+                "type": "medical_memory",
+                "memory_id": memory_id,
+                "content": content,
+                "memory_type": memory_type,
+                "timestamp": self._get_timestamp()
+            }
+            
+            # Store in memory
+            result = memory.add(
+                messages=[memory_content],
+                user_id="medical_system"
+            )
+            
+            return {
+                "stored": True,
+                "memory_id": result.get("memory_id"),
+                "content": content,
+                "memory_type": memory_type,
+                "storage_timestamp": self._get_timestamp()
+            }
+            
+        except Exception as e:
+            return {
+                "stored": False,
+                "error": str(e),
+                "memory_id": memory_id
+            }
+    
+    def retrieve_medical_memory(self, memory_id: str) -> Dict[str, Any]:
+        """Retrieve a medical memory entry"""
+        if not MEM0_AVAILABLE:
+            return self._mock_memory_retrieval(f"medical_memory_{memory_id}", "medical")
+        
+        try:
+            memory = self.memory_instances.get("ethical")
+            if not memory:
+                return {"error": "Memory system not initialized"}
+            
+            # Query memory for specific medical memory
+            query = f"memory_id:{memory_id} AND type:medical_memory"
+            result = memory.query(
+                query=query,
+                user_id="medical_system"
+            )
+            
+            if result and result.get("messages"):
+                memory_data = result["messages"][0]
+                return {
+                    "found": True,
+                    "memory_id": memory_id,
+                    "content": memory_data.get("content", ""),
+                    "memory_type": memory_data.get("memory_type", ""),
+                    "timestamp": memory_data.get("timestamp", ""),
+                    "retrieval_timestamp": self._get_timestamp()
+                }
+            else:
+                return {
+                    "found": False,
+                    "memory_id": memory_id,
+                    "error": "Memory not found"
+                }
+                
+        except Exception as e:
+            return {
+                "found": False,
+                "error": str(e),
+                "memory_id": memory_id
+            }
+    
+    def store_ethical_memory(self, memory_id: str, content: str, ethical_framework: str) -> Dict[str, Any]:
+        """Store ethical memory entry"""
+        if not MEM0_AVAILABLE:
+            return self._mock_memory_storage({"content": content, "framework": ethical_framework}, "ethical")
+        
+        try:
+            memory = self.memory_instances.get("ethical")
+            if not memory:
+                return {"error": "Ethical memory system not initialized"}
+            
+            # Format ethical memory for storage
+            memory_content = {
+                "type": "ethical_memory",
+                "memory_id": memory_id,
+                "content": content,
+                "ethical_framework": ethical_framework,
+                "timestamp": self._get_timestamp()
+            }
+            
+            # Store in memory
+            result = memory.add(
+                messages=[memory_content],
+                user_id="ethical_system"
+            )
+            
+            return {
+                "stored": True,
+                "memory_id": result.get("memory_id"),
+                "content": content,
+                "ethical_framework": ethical_framework,
+                "storage_timestamp": self._get_timestamp()
+            }
+            
+        except Exception as e:
+            return {
+                "stored": False,
+                "error": str(e),
+                "memory_id": memory_id
             }
     
     def get_agent_memory_context(self, agent_id: str, current_situation: str) -> Dict[str, Any]:
