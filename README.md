@@ -580,8 +580,8 @@ simulation_ethics:
   consciousness_threshold: 0.001    # Auto-terminate if exceeded
   suffering_entropy_cap: 0.0001     # Maximum simulated distress
   memory_decay_rate: 0.1            # Natural forgetting simulation
-  flash_cycle_duration: "1_hour"    # Maximum simulation time
-  mandatory_cooling_period: "24_hours" # Between intensive simulations
+  flash_cycle_duration: "x_hours"    # Maximum simulation time
+  cooling_period: "x_hours"         # Between simulations for human auditing
 ```
 
 **10th Man System Configuration**:
