@@ -43,3 +43,21 @@
 [submodule "utils/awesome-production-ml"]
 	path = utils/awesome-production-ml
 	url = https://github.com/EthicalML/awesome-production-machine-learning.git
+[submodule "core/neural/deepchem"]
+	path = core/neural/deepchem
+	url = https://github.com/deepchem/deepchem.git
+[submodule "math_foundation/bionemo"]
+	path = math_foundation/bionemo
+	url = https://github.com/NVIDIA/BioNeMo.git
+[submodule "core/neural/neurotrale"]
+	path = core/neural/neurotrale
+	url = https://github.com/nilearn/nilearn.git
+[submodule "core/neural/reinvent"]
+	path = core/neural/reinvent
+	url = https://github.com/MolecularAI/REINVENT.git
+[submodule "orchestration/agents/ai_scientist"]
+	path = orchestration/agents/ai_scientist
+	url = https://github.com/Significant-Gravitas/AutoGPT.git
+[submodule "orchestration/agents/camel_ai"]
+	path = orchestration/agents/camel_ai
+	url = https://github.com/camel-ai/camel.git

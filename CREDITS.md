@@ -85,6 +85,14 @@ When adding new open-source dependencies, please:
   - License: Check repository for current license
   - Usage: Self-evolving autonomous language agents
 
+- **AutoGPT** - https://github.com/Significant-Gravitas/AutoGPT
+  - License: MIT License
+  - Usage: Autonomous AI agent framework for automated research execution
+
+- **CAMEL-AI** - https://github.com/camel-ai/camel
+  - License: Apache 2.0
+  - Usage: Autonomous communicative agents for enhanced multi-agent coordination
+
 ### Explainability and Ethics
 - **AI Explainability 360** - https://github.com/Trusted-AI/AIX360
   - License: Apache License 2.0
@@ -113,6 +121,24 @@ When adding new open-source dependencies, please:
   - License: MIT License
   - Usage: Resource collection for ethical ML deployment and monitoring
 
+### Research and Drug Discovery
+- **DeepChem** - https://github.com/deepchem/deepchem
+  - License: MIT License
+  - Usage: Molecular modeling and drug discovery for research acceleration
+
+- **BioNeMo** - https://github.com/NVIDIA/BioNeMo
+  - License: Apache 2.0
+  - Usage: ML framework for biomolecular simulations and protein modeling
+
+- **REINVENT** - https://github.com/MolecularAI/REINVENT
+  - License: MIT License
+  - Usage: Generative AI for drug candidate generation and biomarker discovery
+
+### Neuroimaging and Medical Analysis
+- **Nilearn** - https://github.com/nilearn/nilearn
+  - License: BSD 3-Clause License
+  - Usage: Neuroimaging analysis for Parkinson's and Alzheimer's research
+
 ## Integration Architecture
 
 All open source components are integrated as Git submodules with custom wrapper interfaces to provide:
@@ -123,4 +149,3 @@ All open source components are integrated as Git submodules with custom wrapper 
 - Comprehensive error handling and logging
 
 The integration wrappers maintain the original licenses and attribution requirements of each component while providing a unified interface for the PremedPro AI hybrid neuro-symbolic system.
-EOF < /dev/null
