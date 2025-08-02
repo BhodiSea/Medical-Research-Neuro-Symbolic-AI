@@ -964,11 +964,6 @@ Complete attribution details available in [CREDITS.md](CREDITS.md).
 - ✅ Submodule integration for 30+ AI systems
 - ✅ Initial documentation and examples
 
-### Upcoming Releases
-- **v0.3.0** (Q1 2024): Core AI reasoning implementation
-- **v0.4.0** (Q2 2024): Medical AI integration and biomarker discovery
-- **v1.0.0** (Q4 2024): Production-ready medical research platform
-
 See [CHANGELOG.md](CHANGELOG.md) for detailed release notes and migration guides.
 
 ## Performance Optimization & Scaling
