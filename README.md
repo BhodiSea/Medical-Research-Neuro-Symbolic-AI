@@ -105,7 +105,7 @@ graph TB
 | **🤖 Orchestration** | Multi-Agent, Coordination | ⚠️ Wrapper-Ready | OpenSSA, CrewAI, AIWaves |
 | **🎭 Simulation Engine** | Flash Cycles, Memory Decay | 🔴 Conceptual | Custom, Mem0, Julia Integration |
 | **🎯 10th Man System** | Consensus, Dissent, Counter-args | ⚠️ Mock-Implemented | Multi-Agent, Ethical Reasoning |
-| **⏱️ Research Acceleration** | Timeline Modeling, Predictions | 🔴 Visionary | QM/QFT Models, Thermodynamics |
+| **⏱️ Research Acceleration** | Timeline Modeling, Predictions | 🔴| QM/QFT Models, Thermodynamics |
 
 <details>
 <summary><strong>📊 Data Flow Architecture (Click to expand)</strong></summary>
