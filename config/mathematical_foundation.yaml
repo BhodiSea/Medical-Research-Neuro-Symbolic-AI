@@ -1,0 +1,108 @@
+# Mathematical Foundation Configuration
+# Integrates Julia quantum models and AutoDock visualization
+
+mathematical_foundation:
+  # Julia Integration Settings
+  julia:
+    enabled: true
+    julia_path: null  # Auto-detect, or specify path like "/usr/local/bin/julia"
+    math_foundation_path: "math_foundation"
+    modules:
+      - "qft_qm.jl"
+      - "thermo_entropy.jl"
+    
+    # Quantum Model Parameters
+    quantum_models:
+      hbar_analog: 1.0  # Reduced Planck constant analog for AI uncertainty
+      uncertainty_principle_enabled: true
+      quantum_entropy_enabled: true
+      field_evolution_enabled: true
+      
+    # Thermodynamic Parameters
+    thermodynamic:
+      temperature: 1.0
+      chemical_potential: 0.0
+      entropy_calculation_enabled: true
+      equilibrium_finding_enabled: true
+
+  # AutoDock Integration Settings
+  autodock:
+    enabled: true
+    vina_executable: "vina"  # Path to AutoDock Vina executable
+    visualization_enabled: true
+    
+    # Molecular Docking Parameters
+    docking:
+      exhaustiveness: 8
+      num_modes: 9
+      energy_range: 3
+      max_evals: 1000000
+      
+    # Virtual Screening Settings
+    virtual_screening:
+      batch_size: 100
+      parallel_processing: true
+      result_filtering: true
+      
+    # Visualization Components
+    visualization:
+      binding_site_visualization: true
+      ligand_protein_interaction: true
+      binding_affinity_plots: true
+      molecular_dynamics_trajectory: false
+
+  # Integration with Hybrid Bridge
+  hybrid_bridge_integration:
+    quantum_uncertainty_enabled: true
+    molecular_analysis_enabled: true
+    uncertainty_bounds_calculation: true
+    
+    # Performance Settings
+    performance:
+      lazy_loading: true
+      fallback_on_error: true
+      timeout_seconds: 30
+      
+    # Logging and Monitoring
+    logging:
+      quantum_calculations: true
+      molecular_docking: true
+      performance_metrics: true
+      error_reporting: true
+
+# System Integration Points
+integration_points:
+  # Connect to Hybrid Bridge
+  hybrid_bridge:
+    mathematical_foundation_initialization: true
+    quantum_uncertainty_integration: true
+    molecular_analysis_integration: true
+    
+  # Connect to Medical Agents
+  medical_agents:
+    quantum_confidence_scoring: true
+    molecular_drug_analysis: true
+    uncertainty_quantification: true
+    
+  # Connect to API Layer
+  api_layer:
+    mathematical_foundation_status: true
+    quantum_uncertainty_endpoints: true
+    molecular_docking_endpoints: true
+
+# Error Handling and Fallbacks
+error_handling:
+  julia_unavailable:
+    fallback_to_python: true
+    log_warning: true
+    continue_operation: true
+    
+  autodock_unavailable:
+    fallback_to_mock: true
+    log_warning: true
+    continue_operation: true
+    
+  quantum_calculation_failure:
+    fallback_to_classical: true
+    log_error: true
+    return_basic_uncertainty: true 

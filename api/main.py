@@ -16,7 +16,7 @@ from typing import Dict, Any
 import os
 
 # Import route modules
-from .routes import medical, user, application, health
+from .routes import medical, user, application, health, mathematical_foundation
 from .core.config import Settings, get_settings
 from .core.exceptions import PremedProException
 from .core.logging_config import setup_logging
@@ -185,6 +185,12 @@ app.include_router(
     application.router,
     prefix="/api/v1/application",
     tags=["Application Review"]
+)
+
+app.include_router(
+    mathematical_foundation.router,
+    prefix="/api/v1",
+    tags=["Mathematical Foundation"]
 )
 
 

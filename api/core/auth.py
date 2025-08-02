@@ -7,48 +7,57 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import Optional, List
 import jwt
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+from passlib.context import CryptContext
+from sqlalchemy.orm import Session
 
 from .config import get_settings
 from .exceptions import AuthenticationException, AuthorizationException
+from ..database.models import User
+from ..database.connection import get_db_session
 
 logger = logging.getLogger(__name__)
 security = HTTPBearer()
 settings = get_settings()
 
-
-class User:
-    """User model placeholder"""
-    def __init__(self, id: int, email: str, role: str, is_active: bool = True):
-        self.id = id
-        self.email = email
-        self.role = role
-        self.is_active = is_active
+# Password hashing context
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 async def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security)
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db_session)
 ) -> User:
-    """Get current authenticated user"""
-    
-    # This is a placeholder implementation
-    # In production, this would validate JWT tokens and query the database
+    """Get current authenticated user from JWT token"""
     
     try:
         # Decode JWT token
         token = credentials.credentials
+        payload = verify_token(token)
         
-        # For now, create a mock user
-        # In production, decode the JWT and get user from database
-        mock_user = User(
-            id=1,
-            email="test@example.com",
-            role="premed",
-            is_active=True
-        )
+        # Extract user email from token
+        email: str = payload.get("sub")
+        if email is None:
+            raise AuthenticationException("Token missing subject")
         
-        return mock_user
+        # Get user from database
+        user = db.query(User).filter(User.email == email).first()
+        if user is None:
+            raise AuthenticationException("User not found")
         
+        # Check if user is active
+        if not user.is_active:
+            raise AuthenticationException("User account is disabled")
+        
+        # Update last login timestamp
+        user.last_login = datetime.now(timezone.utc)
+        db.commit()
+        
+        logger.debug(f"User authenticated: {email}")
+        return user
+        
+    except AuthenticationException:
+        raise
     except Exception as e:
         logger.error(f"Authentication failed: {str(e)}")
         raise AuthenticationException("Invalid authentication credentials")
@@ -56,7 +65,8 @@ async def get_current_user(
 
 async def get_optional_user(
     request: Request,
-    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security)
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
+    db: Session = Depends(get_db_session)
 ) -> Optional[User]:
     """Get current user if authenticated, otherwise return None"""
     
@@ -64,7 +74,7 @@ async def get_optional_user(
         return None
     
     try:
-        return await get_current_user(credentials)
+        return await get_current_user(credentials, db)
     except Exception:
         return None
 
@@ -103,11 +113,15 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     to_encode = data.copy()
     
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     
-    to_encode.update({"exp": expire})
+    to_encode.update({
+        "exp": expire,
+        "iat": datetime.now(timezone.utc),
+        "type": "access"
+    })
     
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
@@ -118,8 +132,48 @@ def verify_token(token: str) -> dict:
     
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        
+        # Check token type
+        if payload.get("type") != "access":
+            raise AuthenticationException("Invalid token type")
+        
         return payload
+        
     except jwt.ExpiredSignatureError:
         raise AuthenticationException("Token has expired")
-    except jwt.JWTError:
-        raise AuthenticationException("Invalid token") 
+    except jwt.InvalidTokenError:
+        raise AuthenticationException("Invalid token")
+    except Exception as e:
+        logger.error(f"Token verification error: {str(e)}")
+        raise AuthenticationException("Token verification failed")
+
+
+def hash_password(password: str) -> str:
+    """Hash password using bcrypt"""
+    return pwd_context.hash(password)
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verify password against hash"""
+    return pwd_context.verify(plain_password, hashed_password)
+
+
+def authenticate_user_credentials(email: str, password: str, db: Session) -> Optional[User]:
+    """Authenticate user with email and password"""
+    
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        return None
+    
+    if not verify_password(password, user.hashed_password):
+        return None
+    
+    if not user.is_active:
+        return None
+    
+    # Update last login
+    user.last_login = datetime.now(timezone.utc)
+    db.commit()
+    
+    logger.info(f"User authenticated: {email}")
+    return user 

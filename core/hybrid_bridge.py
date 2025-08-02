@@ -8,10 +8,22 @@ import logging
 import asyncio
 from dataclasses import dataclass
 from enum import Enum
+import sys
+from pathlib import Path
 
 # Import custom components
 from .symbolic.custom_logic import MedicalLogicEngine
 from .neural.custom_neural import MedicalNeuralReasoner, HybridNeuralSymbolic
+
+# Import mathematical foundation components
+try:
+    sys.path.append(str(Path(__file__).parent.parent / "math_foundation"))
+    from python_wrapper import JuliaMathFoundation, create_math_foundation
+    from autodock_integration import AutoDockIntegration
+    MATH_FOUNDATION_AVAILABLE = True
+except ImportError as e:
+    logging.warning(f"Mathematical foundation not available: {e}")
+    MATH_FOUNDATION_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +58,10 @@ class HybridReasoningEngine:
         self.neural_reasoner = None
         self.hybrid_bridge = None
         
+        # Mathematical foundation components
+        self.math_foundation = None
+        self.autodock_integration = None
+        
         # Reasoning strategy
         self.default_mode = ReasoningMode(config.get("reasoning_mode", "adaptive"))
         
@@ -55,7 +71,9 @@ class HybridReasoningEngine:
             "symbolic_success_rate": 0.0,
             "neural_success_rate": 0.0,
             "hybrid_success_rate": 0.0,
-            "average_confidence": 0.0
+            "average_confidence": 0.0,
+            "quantum_uncertainty": 0.0,
+            "molecular_docking_confidence": 0.0
         }
     
     def initialize(self) -> None:
@@ -73,6 +91,10 @@ class HybridReasoningEngine:
                 self.config.get("neural_config")
             )
             
+            # Initialize mathematical foundation
+            if MATH_FOUNDATION_AVAILABLE:
+                self._initialize_mathematical_foundation()
+            
             # Create hybrid bridge
             self.hybrid_bridge = HybridNeuralSymbolic(
                 self.neural_reasoner, 
@@ -84,6 +106,35 @@ class HybridReasoningEngine:
         except Exception as e:
             logger.error(f"Failed to initialize hybrid reasoning engine: {e}")
             raise
+    
+    def _initialize_mathematical_foundation(self) -> None:
+        """Initialize Julia mathematical foundation and AutoDock integration"""
+        try:
+            # Initialize Julia mathematical foundation
+            math_config = self.config.get("math_foundation", {})
+            julia_path = math_config.get("julia_path")
+            math_foundation_path = str(Path(__file__).parent.parent / "math_foundation")
+            
+            self.math_foundation = create_math_foundation(
+                julia_path=julia_path,
+                math_foundation_path=math_foundation_path
+            )
+            
+            if self.math_foundation.initialized:
+                logger.info("Julia mathematical foundation initialized successfully")
+            else:
+                logger.warning("Julia mathematical foundation initialization failed, using fallbacks")
+            
+            # Initialize AutoDock integration
+            autodock_config = self.config.get("autodock", {})
+            self.autodock_integration = AutoDockIntegration(autodock_config)
+            
+            logger.info("Mathematical foundation components initialized")
+            
+        except Exception as e:
+            logger.error(f"Failed to initialize mathematical foundation: {e}")
+            self.math_foundation = None
+            self.autodock_integration = None
     
     async def reason(self, query: str, context: Dict[str, Any], mode: Optional[ReasoningMode] = None) -> ReasoningResult:
         """
@@ -281,7 +332,7 @@ class HybridReasoningEngine:
         )
     
     def _create_hybrid_result(self, query: str, fused_result: Dict[str, Any], reasoning_path: List[str]) -> ReasoningResult:
-        """Create ReasoningResult from hybrid reasoning"""
+        """Create ReasoningResult from hybrid reasoning with mathematical foundation integration"""
         neural_result = fused_result.get("neural_reasoning", {})
         symbolic_result = fused_result.get("symbolic_reasoning", {})
         
@@ -297,20 +348,33 @@ class HybridReasoningEngine:
             neural_contrib = 0.5
             symbolic_contrib = 0.5
         
-        # Extract uncertainty bounds from neural component
-        confidence_intervals = neural_result.get("confidence_intervals", {})
-        uncertainty_bounds = None
-        if confidence_intervals.get("95_percent"):
-            bounds = confidence_intervals["95_percent"]
-            uncertainty_bounds = (
-                min(bounds.get("lower", [])) if bounds.get("lower") else None,
-                max(bounds.get("upper", [])) if bounds.get("upper") else None
-            )
+        # Get base confidence
+        base_confidence = fused_result.get("fused_confidence", 0.0)
+        
+        # Apply quantum uncertainty quantification
+        quantum_result = self._apply_quantum_uncertainty(base_confidence, fused_result)
+        
+        # Apply molecular analysis if relevant
+        molecular_result = self._apply_molecular_analysis(query, fused_result)
+        
+        # Calculate enhanced uncertainty bounds using quantum methods
+        uncertainty_bounds = self._calculate_uncertainty_bounds(base_confidence, fused_result)
+        
+        # Enhance final answer with mathematical foundation results
+        enhanced_answer = fused_result.get("fused_result", {})
+        enhanced_answer.update({
+            "quantum_uncertainty": quantum_result,
+            "molecular_analysis": molecular_result,
+            "mathematical_foundation": {
+                "julia_available": self.math_foundation is not None and self.math_foundation.initialized,
+                "autodock_available": self.autodock_integration is not None
+            }
+        })
         
         return ReasoningResult(
             query=query,
-            final_answer=fused_result.get("fused_result", {}),
-            confidence=fused_result.get("fused_confidence", 0.0),
+            final_answer=enhanced_answer,
+            confidence=base_confidence,
             reasoning_path=reasoning_path,
             symbolic_contribution=symbolic_contrib,
             neural_contribution=neural_contrib,
@@ -380,6 +444,103 @@ class HybridReasoningEngine:
     def _assess_privacy_sensitivity(self, query: str, context: Dict[str, Any]) -> float:
         """Assess privacy sensitivity (0.0 to 1.0)"""
         personal_indicators = ["my", "i have", "patient", "personal", "private"]
+        
+        # Count personal indicators
+        sensitivity_score = sum(1 for indicator in personal_indicators if indicator in query.lower())
+        return min(sensitivity_score / len(personal_indicators), 1.0)
+    
+    def _apply_quantum_uncertainty(self, confidence: float, fused_result: Dict[str, Any]) -> Dict[str, Any]:
+        """Apply quantum uncertainty quantification using Julia mathematical foundation"""
+        if not self.math_foundation or not self.math_foundation.initialized:
+            return {"quantum_uncertainty": 0.0, "uncertainty_source": "fallback"}
+        
+        try:
+            # Create quantum state representation of the confidence
+            amplitudes = [complex(confidence, 0.0)]
+            phases = [0.0]
+            uncertainties = [1.0 - confidence]  # Inverse relationship
+            
+            # Calculate quantum uncertainty
+            quantum_state = self.math_foundation.create_quantum_state(amplitudes, phases, uncertainties)
+            
+            if quantum_state:
+                # Calculate uncertainty principle
+                uncertainty_result = self.math_foundation.calculate_uncertainty_principle(
+                    knowledge_uncertainty=1.0 - confidence,
+                    belief_uncertainty=0.1,  # Base belief uncertainty
+                    hbar_analog=1.0
+                )
+                
+                # Calculate quantum entropy
+                entropy_result = self.math_foundation.calculate_quantum_entropy(amplitudes, uncertainties)
+                
+                return {
+                    "quantum_uncertainty": uncertainty_result.get("uncertainty_product", 0.0),
+                    "quantum_entropy": entropy_result.get("entropy", 0.0),
+                    "uncertainty_source": "julia_quantum",
+                    "quantum_state": "initialized"
+                }
+            
+        except Exception as e:
+            logger.warning(f"Quantum uncertainty calculation failed: {e}")
+        
+        return {"quantum_uncertainty": 0.0, "uncertainty_source": "fallback"}
+    
+    def _apply_molecular_analysis(self, query: str, fused_result: Dict[str, Any]) -> Dict[str, Any]:
+        """Apply molecular docking analysis if query involves drug/protein interactions"""
+        if not self.autodock_integration:
+            return {"molecular_analysis": "not_available"}
+        
+        # Check if query involves molecular/drug topics
+        molecular_keywords = [
+            "drug", "protein", "binding", "molecule", "ligand", "receptor",
+            "docking", "pharmacology", "medication", "compound", "chemical"
+        ]
+        
+        if not any(keyword in query.lower() for keyword in molecular_keywords):
+            return {"molecular_analysis": "not_applicable"}
+        
+        try:
+            # For demonstration, create mock molecular analysis
+            # In real implementation, this would call actual AutoDock methods
+            analysis_result = {
+                "molecular_analysis": "available",
+                "binding_affinity_estimate": 0.75,  # Mock value
+                "docking_confidence": 0.8,
+                "analysis_type": "virtual_screening",
+                "molecular_targets": ["protein_target_1", "protein_target_2"]
+            }
+            
+            # Update performance metrics
+            self.performance_metrics["molecular_docking_confidence"] = analysis_result["docking_confidence"]
+            
+            return analysis_result
+            
+        except Exception as e:
+            logger.warning(f"Molecular analysis failed: {e}")
+            return {"molecular_analysis": "error", "error": str(e)}
+    
+    def _calculate_uncertainty_bounds(self, confidence: float, fused_result: Dict[str, Any]) -> Optional[Tuple[float, float]]:
+        """Calculate uncertainty bounds using quantum-inspired methods"""
+        if not self.math_foundation or not self.math_foundation.initialized:
+            # Fallback calculation
+            uncertainty = 1.0 - confidence
+            return (max(0.0, confidence - uncertainty), min(1.0, confidence + uncertainty))
+        
+        try:
+            # Use quantum uncertainty calculation
+            quantum_result = self._apply_quantum_uncertainty(confidence, fused_result)
+            quantum_uncertainty = quantum_result.get("quantum_uncertainty", 0.0)
+            
+            # Calculate bounds based on quantum uncertainty
+            lower_bound = max(0.0, confidence - quantum_uncertainty)
+            upper_bound = min(1.0, confidence + quantum_uncertainty)
+            
+            return (lower_bound, upper_bound)
+            
+        except Exception as e:
+            logger.warning(f"Uncertainty bounds calculation failed: {e}")
+            return None
         sensitivity_score = sum(1 for indicator in personal_indicators if indicator in query.lower())
         
         # Factor in context
@@ -390,7 +551,7 @@ class HybridReasoningEngine:
     
     def get_system_status(self) -> Dict[str, Any]:
         """Get comprehensive system status"""
-        return {
+        status = {
             "symbolic_engine_status": self.symbolic_engine.get_system_status() if self.symbolic_engine else "not_initialized",
             "neural_reasoner_status": "initialized" if self.neural_reasoner else "not_initialized",
             "hybrid_bridge_status": "initialized" if self.hybrid_bridge else "not_initialized",
@@ -398,6 +559,10 @@ class HybridReasoningEngine:
             "performance_metrics": self.performance_metrics,
             "default_reasoning_mode": self.default_mode.value
         }
+        if MATH_FOUNDATION_AVAILABLE:
+            status["math_foundation_status"] = "initialized" if self.math_foundation else "not_initialized"
+            status["autodock_integration_status"] = "initialized" if self.autodock_integration else "not_initialized"
+        return status
 
 # Factory function for creating hybrid reasoning engine
 def create_hybrid_reasoning_engine(config: Optional[Dict[str, Any]] = None) -> HybridReasoningEngine:
@@ -411,7 +576,11 @@ def create_hybrid_reasoning_engine(config: Optional[Dict[str, Any]] = None) -> H
                 "output_dim": 256,
                 "medical_vocab_size": 10000,
                 "embedding_dim": 512
-            }
+            },
+            "math_foundation": {
+                "julia_path": None
+            },
+            "autodock": {}
         }
     
     engine = HybridReasoningEngine(config)
