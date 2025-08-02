@@ -292,34 +292,34 @@ Support medical research analysis through AI-assisted data processing and patter
 - Research hypothesis validation with dissenting perspectives
 - Integration with ethical audit layer for safety assurance
 
-**Agent Training Framework**:
-- Computational simulation environments for ethical reasoning development
-- Progressive training phases (ethics → domain knowledge)
-- Memory formation through simulated ethical scenarios
-- Configurable ethical constraints and behavioral limits
-- Persistent memory storage with decay mechanisms
+**Agent Development and Partitioning**:
+- Systematic agent design with specialized domain expertise (neurology, molecular biology, pharmacology, etc.)
+- Quasi-partitioning technology creating embodied agent states separate from host neural networks
+- Progressive development pipeline: design → partitioning → ethical training → domain specialization
+- Human-value alignment validation before introduction to specialized research environments
+- Memory persistence across development phases enabling cumulative learning
 
-**Research Modeling Capabilities**:
-- Computational modeling of research timelines and pathways
-- Disease progression modeling using thermodynamic principles
-- Drug candidate prediction through scenario analysis
-- Branching pathway analysis using mathematical modeling
-- Uncertainty quantification for research outcomes
+**10-Agent Collaborative Research Framework**:
+- 9 domain specialist agents each with unique expertise and embodied research experience
+- 1 ethics specialist agent (10th man) with cross-domain knowledge enabling informed dissent
+- Collaborative embodied research within simulated laboratory environments
+- Autonomous hypothesis generation, experimental design, and breakthrough discovery attempts
+- Integrated peer review process with mandatory ethical and methodological challenges
 
 <details>
 <summary><strong>Computational Simulation Framework (Click to expand)</strong></summary>
 
 ### Overview
 
-The system includes a computational simulation framework for controlled modeling of complex scenarios. This approach enables agents to develop reasoning capabilities through experiential learning while maintaining strict ethical constraints.
+The system implements embodied research simulation environments where agents function as autonomous scientists conducting actual research within computationally simulated worlds. Agents are quasi-partitioned from their host neural networks, enabling authentic research experiences while maintaining safety constraints.
 
-### Simulation Architecture
+### Embodied Research Architecture
 
-**Agent Training Components**:
-- **Iterative Cycles**: Short, controlled scenarios for agent learning and evaluation
-- **Memory Management**: Configurable retention and decay mechanisms
-- **Response Modeling**: Simulated responses to ethical and medical scenarios
-- **Progressive Training**: Structured learning phases from basic ethics to domain specialization
+**Research Environment Components**:
+- **Simulated Laboratories**: Virtual research facilities with realistic equipment, data, and constraints
+- **Collaborative Teams**: Multi-agent research groups with specialized roles and expertise
+- **Embodied Learning**: Agents develop capabilities through direct research practice rather than abstract training
+- **Quasi-Partitioning**: Agents operate with sufficient autonomy to conduct authentic research while remaining ethically constrained
 
 **Cognitive Architecture Layers**:
 ```
@@ -329,25 +329,31 @@ Emotional Layer      ← Value-based responses
 Sensorimotor Layer   ← Pattern recognition
 ```
 
-### Ethical Reasoning Development
+### Agent Development Pipeline
 
-**Phase 1: Foundational Ethics**
-- Exposure to philosophical frameworks (deontological, consequentialist, virtue ethics)
-- Core principle establishment: beneficence, non-maleficence, autonomy, justice
-- Moral reasoning through structured ethical scenarios
-- Memory consolidation of ethical decision-making patterns
+**Phase 1: Agent Design and Quasi-Partitioning**
+- Initial agent architecture design with specialized domain expertise
+- Quasi-partitioning to create embodied agent state separate from host neural network
+- Establishment of autonomous cognitive capabilities while maintaining safety constraints
+- Integration with ethical oversight and audit systems
 
-**Phase 2: Domain-Specific Applications**
-- Medical ethics scenarios (informed consent, resource allocation)
-- Research ethics considerations (data privacy, study design)
-- Clinical decision-making under uncertainty
-- Cross-cultural ethical perspective integration
+**Phase 2: Ethical Training and Validation**
+- Embodied ethical training simulations across diverse moral scenarios
+- Development of human-aligned value systems through experiential learning
+- Validation of ethical reasoning capabilities before domain specialization
+- Memory formation of ethical principles through simulated moral experiences
 
-**Phase 3: Multi-Agent Collaboration**
-- Collaborative ethical reasoning scenarios
-- Consensus building with structured dissent mechanisms
-- Evidence-based moral reasoning approaches
-- Conflict resolution in ethical decision-making
+**Phase 3: Domain-Specific Embodied Learning**
+- Introduction to specialized research environments aligned with agent expertise
+- Hands-on learning within simulated laboratories relevant to agent's research domain
+- Development of technical skills through embodied practice in virtual research settings
+- Integration of ethical foundations with domain-specific research methodology
+
+**Phase 4: Collaborative Research Teams**
+- Formation of 10-agent research teams with complementary expertise
+- 9 domain specialists (neurology, molecular biology, pharmacology, biostatistics, etc.)
+- 1 ethics specialist (10th man) with cross-domain knowledge for informed dissent
+- Collaborative embodied research within simulated environments seeking medical breakthroughs
 
 ### Research Modeling Framework
 
@@ -381,33 +387,83 @@ Sensorimotor Layer   ← Pattern recognition
 - **Autonomy Development**: Agents gain independent ethical reasoning capabilities
 - **Transparency Logging**: All memory formation processes auditable
 
-### Implementation Example: Parkinson's Research Analysis
+### Implementation Example: 10-Agent Embodied Parkinson's Research
 
 ```python
-# Research modeling configuration
-analysis_request = {
-    "disease": "Parkinson's Disease",
-    "research_question": "Alpha-synuclein aggregation inhibitors",
-    "modeling_type": "pathway_analysis",
-    "safety_constraints": {
-        "computational_limits": True,
-        "bias_monitoring": "continuous",
-        "transparency": "full_audit_trail"
+# 10-agent embodied research team configuration
+research_team = {
+    "research_question": "Does mitochondrial dysfunction precede alpha-synuclein aggregation?",
+    "simulation_environment": "virtual_neuroscience_lab",
+    "agent_development_status": "post_ethical_validation",
+    "agents": {
+        "agent_1": {"specialty": "neurodegeneration", "embodied_training": "completed"},
+        "agent_2": {"specialty": "mitochondrial_biology", "embodied_training": "completed"},
+        "agent_3": {"specialty": "protein_biochemistry", "embodied_training": "completed"},
+        "agent_4": {"specialty": "cellular_pathology", "embodied_training": "completed"},
+        "agent_5": {"specialty": "biostatistics", "embodied_training": "completed"},
+        "agent_6": {"specialty": "pharmacology", "embodied_training": "completed"},
+        "agent_7": {"specialty": "clinical_research", "embodied_training": "completed"},
+        "agent_8": {"specialty": "computational_biology", "embodied_training": "completed"},
+        "agent_9": {"specialty": "molecular_imaging", "embodied_training": "completed"},
+        "agent_10": {
+            "specialty": "ethics_and_methodology", 
+            "embodied_training": "completed",
+            "cross_domain_knowledge": "all_specialties",
+            "dissent_role": "mandatory_counterargument"
+        }
+    },
+    "simulation_constraints": {
+        "quasi_partitioning": True,
+        "ethical_oversight": "continuous",
+        "memory_persistence": True,
+        "human_value_alignment": "validated",
+        "audit_trail": "full_research_log"
     }
 }
 
-# Multi-agent deliberation
-consensus = medical_agents[0:9].analyze(analysis_request)
-dissent = dissent_agent.generate_counterarguments(consensus)
-final_approach = integrate_perspectives(consensus, dissent)
+# Embodied collaborative research process
+literature_review = research_team.conduct_collaborative_literature_analysis()
+individual_hypotheses = [agent.formulate_hypothesis(literature_review) for agent in agents_1_9]
+consensus_hypothesis = team.synthesize_hypotheses(individual_hypotheses)
 
-# Computational modeling
-results = modeling_engine.run_analysis(
-    approach=final_approach,
-    pathway_count=1000,
-    complexity_limit=0.001,
-    audit_level="comprehensive"
+# 10th man challenges hypothesis formation
+ethical_methodological_critique = agent_10.critique_hypothesis(
+    consensus_hypothesis, 
+    ethical_concerns=True, 
+    methodological_concerns=True
 )
+refined_hypothesis = team.integrate_critique(consensus_hypothesis, ethical_methodological_critique)
+
+# Collaborative experimental design
+experimental_designs = team.design_multi_perspective_experiments(refined_hypothesis)
+peer_reviewed_design = agent_10.review_experimental_ethics(experimental_designs)
+
+# Embodied simulation execution
+simulation_data = virtual_lab.run_collaborative_experiments(peer_reviewed_design)
+specialist_analyses = {
+    agent.specialty: agent.analyze_from_expertise(simulation_data) 
+    for agent in agents_1_9
+}
+
+# Mandatory dissent and integration
+consensus_interpretation = team.synthesize_analyses(specialist_analyses)
+dissent_analysis = agent_10.mandatory_counterargument(
+    consensus_interpretation,
+    cross_domain_knowledge=True,
+    ethical_implications=True
+)
+final_conclusions = team.integrate_dissent(consensus_interpretation, dissent_analysis)
+
+# Research output with embodied team experience
+research_output = {
+    "collaborative_hypothesis": refined_hypothesis,
+    "peer_reviewed_methodology": peer_reviewed_design,
+    "multi_specialist_findings": specialist_analyses,
+    "dissent_integrated_conclusions": final_conclusions,
+    "agent_development_impact": team.extract_embodied_learning(),
+    "ethical_validation_log": agent_10.get_ethical_oversight_record(),
+    "complete_audit_trail": simulation.get_full_research_audit()
+}
 ```
 
 </details>
